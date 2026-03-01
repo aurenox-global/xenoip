@@ -3516,12 +3516,10 @@ function clearBotLog() {
 
 function exportLog() {
   if (!botState.trades.length) { notify('No hay trades para exportar', 'error'); return; }
-  const header = 'Hora,Par,Lado,Precio,Cantidad,PnL,Motivo
-';
+  const header = 'Hora,Par,Lado,Precio,Cantidad,PnL,Motivo\n';
   const rows = botState.trades.map(t =>
     `${new Date(t.time).toISOString()},${currentSymbol},${t.side},${t.price},${t.qty},${t.pnl},${t.reason}`
-  ).join('
-');
+  ).join('\n');
   const blob = new Blob([header + rows], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
