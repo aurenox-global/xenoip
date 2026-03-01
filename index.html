@@ -806,6 +806,427 @@
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
   }
+
+  /* ═══════════════════════════════════
+     BOT MODULE STYLES
+  ═══════════════════════════════════ */
+
+  .bot-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 0;
+    height: 100%;
+  }
+
+  .bot-sidebar {
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .bot-sidebar::-webkit-scrollbar { width: 3px; }
+  .bot-sidebar::-webkit-scrollbar-thumb { background: var(--border2); }
+
+  .bot-main {
+    overflow-y: auto;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .bot-main::-webkit-scrollbar { width: 3px; }
+  .bot-main::-webkit-scrollbar-thumb { background: var(--border2); }
+
+  .config-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 14px;
+  }
+
+  .config-card-title {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .strategy-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  .strat-btn {
+    padding: 8px 6px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    color: var(--text3);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .strat-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .strat-btn.active { background: rgba(0,180,255,0.1); border-color: var(--blue); color: var(--blue); }
+
+  .strat-config { display: none; }
+  .strat-config.active { display: block; }
+
+  .param-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .param-group { margin-bottom: 8px; }
+
+  .param-label {
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .param-input {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 8px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .param-input:focus { border-color: var(--blue); }
+
+  .param-select {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 8px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .param-select:focus { border-color: var(--blue); }
+
+  .indicator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .indicator-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .indicator-card.enabled { border-color: var(--blue); }
+  .indicator-card.signal-buy { border-color: var(--green); background: rgba(0,229,160,0.05); }
+  .indicator-card.signal-sell { border-color: var(--red); background: rgba(255,69,96,0.05); }
+
+  .ind-name {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .ind-value {
+    font-size: 18px;
+    font-weight: 700;
+    font-family: var(--sans);
+    margin: 4px 0;
+  }
+
+  .ind-signal {
+    font-size: 10px;
+    letter-spacing: 2px;
+    font-family: var(--sans);
+    font-weight: 600;
+  }
+
+  .ind-toggle {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 15px;
+    background: var(--border2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: none;
+  }
+
+  .ind-toggle::after {
+    content: '';
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    background: var(--text3);
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: all 0.2s;
+  }
+
+  .ind-toggle.on { background: rgba(0,180,255,0.3); }
+  .ind-toggle.on::after { left: 15px; background: var(--blue); }
+
+  /* BOT CONTROLS */
+  .bot-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 12px 14px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--border2);
+  }
+
+  .btn-bot-start {
+    flex: 1;
+    padding: 10px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid var(--blue);
+    background: rgba(0,180,255,0.1);
+    color: var(--blue);
+    transition: all 0.2s;
+  }
+
+  .btn-bot-start:hover { background: var(--blue); color: #000; }
+  .btn-bot-start.running { border-color: var(--red); background: rgba(255,69,96,0.1); color: var(--red); }
+  .btn-bot-start.running:hover { background: var(--red); color: #fff; }
+
+  .paper-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: var(--yellow);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .paper-toggle input { accent-color: var(--yellow); }
+
+  /* STATS CARDS */
+  .bot-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .bot-stat-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bot-stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--blue);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+
+  .bot-stat-card:hover::after { transform: scaleX(1); }
+
+  .bsc-label { font-size: 9px; color: var(--text3); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .bsc-val { font-family: var(--sans); font-size: 22px; font-weight: 700; }
+  .bsc-sub { font-size: 9px; color: var(--text3); margin-top: 3px; }
+
+  /* TRADE LOG */
+  .trade-log {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    max-height: 280px;
+    overflow-y: auto;
+  }
+
+  .trade-log::-webkit-scrollbar { width: 3px; }
+  .trade-log::-webkit-scrollbar-thumb { background: var(--border2); }
+
+  .log-row {
+    display: grid;
+    grid-template-columns: 80px 80px 60px 90px 90px 80px 1fr;
+    padding: 5px 12px;
+    font-size: 10px;
+    border-bottom: 1px solid rgba(26,37,53,0.5);
+    align-items: center;
+    animation: logIn 0.4s ease;
+  }
+
+  @keyframes logIn {
+    from { background: rgba(0,180,255,0.08); }
+    to { background: transparent; }
+  }
+
+  .log-header {
+    background: var(--bg2);
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* GRID VISUALIZATION */
+  .grid-viz {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 14px;
+    position: relative;
+    min-height: 200px;
+  }
+
+  canvas#gridCanvas {
+    width: 100%;
+    height: 200px;
+    display: block;
+  }
+
+  /* CHART WITH INDICATORS */
+  .chart-with-indicators {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 0;
+    overflow: hidden;
+  }
+
+  canvas#botChart {
+    width: 100%;
+    height: 240px;
+    display: block;
+  }
+
+  canvas#rsiChart {
+    width: 100%;
+    height: 70px;
+    display: block;
+    border-top: 1px solid var(--border);
+  }
+
+  canvas#macdChart {
+    width: 100%;
+    height: 70px;
+    display: block;
+    border-top: 1px solid var(--border);
+  }
+
+  /* SIGNAL BADGE */
+  .signal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border: 1px solid;
+  }
+
+  .signal-badge.buy { color: var(--green); border-color: var(--green); background: rgba(0,229,160,0.08); }
+  .signal-badge.sell { color: var(--red); border-color: var(--red); background: rgba(255,69,96,0.08); }
+  .signal-badge.neutral { color: var(--text3); border-color: var(--border2); }
+  .signal-badge.strong-buy { color: #000; background: var(--green); border-color: var(--green); }
+  .signal-badge.strong-sell { color: #fff; background: var(--red); border-color: var(--red); }
+
+  /* RISK PANEL */
+  .risk-meters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .risk-meter {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 10px;
+  }
+
+  .risk-bar-wrap {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+
+  .risk-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+
+  /* ARBI TABLE */
+  .arbi-row {
+    display: grid;
+    grid-template-columns: 120px 100px 100px 80px 80px;
+    padding: 5px 12px;
+    font-size: 10px;
+    border-bottom: 1px solid rgba(26,37,53,0.3);
+  }
+
+  .arbi-opport { background: rgba(245,197,24,0.05); border-left: 2px solid var(--yellow) !important; }
+
+  /* RUNNING PULSE */
+  @keyframes botPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,180,255,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(0,180,255,0); }
+  }
+
+  .bot-running-indicator {
+    width: 8px; height: 8px;
+    background: var(--blue);
+    border-radius: 50%;
+    animation: botPulse 1.5s infinite;
+  }
+
 </style>
 </head>
 <body>
@@ -888,6 +1309,7 @@
       <button class="tab" onclick="switchTab('trade', this)">TRADING</button>
       <button class="tab" onclick="switchTab('orders', this)">ÓRDENES</button>
       <button class="tab" onclick="switchTab('account', this)">CUENTA</button>
+      <button class="tab" onclick="switchTab('bot', this)" style="color:var(--blue);border-bottom-color:transparent">🤖 BOT</button>
     </div>
 
     <!-- MARKET TAB -->
@@ -1065,6 +1487,351 @@
         Estado: Sin conexión. Ingresa tus credenciales API y haz click en CONECTAR.
       </div>
     </div>
+
+    <!-- BOT TAB -->
+    <div class="tab-content" id="tab-bot" style="display:none;padding:0;height:100%">
+      <div class="bot-layout">
+
+        <!-- BOT LEFT SIDEBAR: Config -->
+        <div class="bot-sidebar">
+
+          <!-- PAPER TRADING TOGGLE -->
+          <div class="config-card" style="border-color:var(--yellow);background:rgba(245,197,24,0.03)">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-family:var(--sans);font-size:13px;font-weight:700;color:var(--yellow);letter-spacing:2px">PAPER TRADING</div>
+                <div style="font-size:10px;color:var(--text3);margin-top:2px">Simula sin dinero real</div>
+              </div>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+                <input type="checkbox" id="paperMode" checked style="accent-color:var(--yellow)">
+                <span id="paperLabel" style="font-size:10px;color:var(--yellow);letter-spacing:1px">ACTIVO</span>
+              </label>
+            </div>
+            <div style="margin-top:10px" id="paperBalanceRow">
+              <label class="param-label">Balance simulado (USDT)</label>
+              <input type="number" class="param-input" id="paperBalance" value="1000" step="100">
+            </div>
+          </div>
+
+          <!-- STRATEGY SELECTOR -->
+          <div class="config-card">
+            <div class="config-card-title">⚡ Estrategia</div>
+            <div class="strategy-tabs">
+              <button class="strat-btn active" onclick="selectStrategy('grid', this)">📐 Grid</button>
+              <button class="strat-btn" onclick="selectStrategy('dca', this)">💰 DCA</button>
+              <button class="strat-btn" onclick="selectStrategy('scalp', this)">⚡ Scalping</button>
+              <button class="strat-btn" onclick="selectStrategy('arbi', this)">🔄 Arbitraje</button>
+            </div>
+
+            <!-- GRID CONFIG -->
+            <div class="strat-config active" id="config-grid">
+              <div class="param-row">
+                <div class="param-group">
+                  <label class="param-label">Precio mínimo</label>
+                  <input type="number" class="param-input" id="grid-low" placeholder="90000" step="any">
+                </div>
+                <div class="param-group">
+                  <label class="param-label">Precio máximo</label>
+                  <input type="number" class="param-input" id="grid-high" placeholder="110000" step="any">
+                </div>
+              </div>
+              <div class="param-row">
+                <div class="param-group">
+                  <label class="param-label">Niveles</label>
+                  <input type="number" class="param-input" id="grid-levels" value="10" min="3" max="50">
+                </div>
+                <div class="param-group">
+                  <label class="param-label">Tipo</label>
+                  <select class="param-select" id="grid-type">
+                    <option value="arithmetic">Aritmético</option>
+                    <option value="geometric">Geométrico</option>
+                  </select>
+                </div>
+              </div>
+              <div class="param-group">
+                <label class="param-label">Inversión por nivel (USDT)</label>
+                <input type="number" class="param-input" id="grid-amount" value="50" step="any">
+              </div>
+              <button class="btn blue sm" style="width:100%;margin-top:4px" onclick="previewGrid()">PREVISUALIZAR GRID</button>
+            </div>
+
+            <!-- DCA CONFIG -->
+            <div class="strat-config" id="config-dca">
+              <div class="param-group">
+                <label class="param-label">Trigger</label>
+                <select class="param-select" id="dca-trigger">
+                  <option value="time">Por tiempo</option>
+                  <option value="drop">Por caída de precio</option>
+                  <option value="rsi">Por RSI (sobreventa)</option>
+                </select>
+              </div>
+              <div class="param-row">
+                <div class="param-group">
+                  <label class="param-label">Intervalo (min)</label>
+                  <input type="number" class="param-input" id="dca-interval" value="60" min="1">
+                </div>
+                <div class="param-group">
+                  <label class="param-label">% Caída trigger</label>
+                  <input type="number" class="param-input" id="dca-drop" value="3" step="0.5">
+                </div>
+              </div>
+              <div class="param-row">
+                <div class="param-group">
+                  <label class="param-label">Monto base (USDT)</label>
+                  <input type="number" class="param-input" id="dca-amount" value="20" step="any">
+                </div>
+                <div class="param-group">
+                  <label class="param-label">Multiplicador</label>
+                  <input type="number" class="param-input" id="dca-mult" value="1.5" step="0.1" min="1">
+                </div>
+              </div>
+              <div class="param-group">
+                <label class="param-label">Máx. órdenes DCA</label>
+                <input type="number" class="param-input" id="dca-max" value="5" min="1" max="20">
+              </div>
+            </div>
+
+            <!-- SCALP CONFIG -->
+            <div class="strat-config" id="config-scalp">
+              <div class="param-group">
+                <label class="param-label">Señal de entrada</label>
+                <select class="param-select" id="scalp-signal">
+                  <option value="rsi">RSI cruce 30/70</option>
+                  <option value="macd">MACD crossover</option>
+                  <option value="bb">Bollinger bounce</option>
+                  <option value="ema">EMA cruce</option>
+                  <option value="combo">Combinado (2+)</option>
+                </select>
+              </div>
+              <div class="param-row">
+                <div class="param-group">
+                  <label class="param-label">Take Profit %</label>
+                  <input type="number" class="param-input" id="scalp-tp" value="1.5" step="0.1">
+                </div>
+                <div class="param-group">
+                  <label class="param-label">Stop Loss %</label>
+                  <input type="number" class="param-input" id="scalp-sl" value="0.8" step="0.1">
+                </div>
+              </div>
+              <div class="param-group">
+                <label class="param-label">Tamaño posición (USDT)</label>
+                <input type="number" class="param-input" id="scalp-size" value="100" step="any">
+              </div>
+              <div class="param-group">
+                <label class="param-label">Intervalo análisis</label>
+                <select class="param-select" id="scalp-interval">
+                  <option value="1M">1 minuto</option>
+                  <option value="5M" selected>5 minutos</option>
+                  <option value="15M">15 minutos</option>
+                  <option value="1H">1 hora</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- ARBI CONFIG -->
+            <div class="strat-config" id="config-arbi">
+              <div class="param-group">
+                <label class="param-label">Par base</label>
+                <input type="text" class="param-input" id="arbi-base" value="BTC_USDT">
+              </div>
+              <div class="param-group">
+                <label class="param-label">Par relacionado</label>
+                <input type="text" class="param-input" id="arbi-pair2" value="ETH_USDT">
+              </div>
+              <div class="param-row">
+                <div class="param-group">
+                  <label class="param-label">Min spread %</label>
+                  <input type="number" class="param-input" id="arbi-spread" value="0.3" step="0.05">
+                </div>
+                <div class="param-group">
+                  <label class="param-label">Capital (USDT)</label>
+                  <input type="number" class="param-input" id="arbi-capital" value="200" step="any">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- INDICATORS -->
+          <div class="config-card">
+            <div class="config-card-title">📈 Indicadores</div>
+            <div class="indicator-grid" id="indicatorsPanel">
+              <div class="indicator-card" id="ind-rsi">
+                <div class="ind-name">RSI</div>
+                <div class="ind-value" id="rsi-val">--</div>
+                <div class="ind-signal" id="rsi-sig" style="color:var(--text3)">CALCULANDO</div>
+                <button class="ind-toggle on" id="ind-rsi-toggle" onclick="toggleIndicator('rsi')"></button>
+              </div>
+              <div class="indicator-card" id="ind-macd">
+                <div class="ind-name">MACD</div>
+                <div class="ind-value" id="macd-val">--</div>
+                <div class="ind-signal" id="macd-sig" style="color:var(--text3)">CALCULANDO</div>
+                <button class="ind-toggle on" id="ind-macd-toggle" onclick="toggleIndicator('macd')"></button>
+              </div>
+              <div class="indicator-card" id="ind-bb">
+                <div class="ind-name">BOLL</div>
+                <div class="ind-value" id="bb-val">--</div>
+                <div class="ind-signal" id="bb-sig" style="color:var(--text3)">CALCULANDO</div>
+                <button class="ind-toggle on" id="ind-bb-toggle" onclick="toggleIndicator('bb')"></button>
+              </div>
+              <div class="indicator-card" id="ind-ema">
+                <div class="ind-name">EMA</div>
+                <div class="ind-value" id="ema-val">--</div>
+                <div class="ind-signal" id="ema-sig" style="color:var(--text3)">CALCULANDO</div>
+                <button class="ind-toggle on" id="ind-ema-toggle" onclick="toggleIndicator('ema')"></button>
+              </div>
+            </div>
+            <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text3)">SEÑAL COMBINADA:</span>
+              <span class="signal-badge neutral" id="combinedSignal">NEUTRAL</span>
+              <span style="margin-left:auto;font-size:10px;color:var(--text3)" id="signalStrength">0/4</span>
+            </div>
+          </div>
+
+          <!-- RISK MANAGEMENT -->
+          <div class="config-card">
+            <div class="config-card-title">🛡️ Gestión de Riesgo</div>
+            <div class="param-row">
+              <div class="param-group">
+                <label class="param-label">Stop-Loss global %</label>
+                <input type="number" class="param-input" id="risk-sl" value="2" step="0.1" min="0.1">
+              </div>
+              <div class="param-group">
+                <label class="param-label">Take-Profit global %</label>
+                <input type="number" class="param-input" id="risk-tp" value="4" step="0.1" min="0.1">
+              </div>
+            </div>
+            <div class="param-row">
+              <div class="param-group">
+                <label class="param-label">Pérdida diaria máx %</label>
+                <input type="number" class="param-input" id="risk-daily" value="5" step="0.5" min="1">
+              </div>
+              <div class="param-group">
+                <label class="param-label">% balance por trade</label>
+                <input type="number" class="param-input" id="risk-size" value="10" step="1" min="1" max="100">
+              </div>
+            </div>
+            <div class="param-group">
+              <label class="param-label">Trailing Stop (0 = desactivado %)</label>
+              <input type="number" class="param-input" id="risk-trail" value="1.5" step="0.1" min="0">
+            </div>
+            <div class="risk-meters">
+              <div class="risk-meter">
+                <div style="font-size:9px;color:var(--text3);letter-spacing:1px">PÉRDIDA HOY</div>
+                <div style="font-family:var(--sans);font-size:16px;font-weight:700" id="riskDailyLoss">$0.00</div>
+                <div class="risk-bar-wrap"><div class="risk-bar" id="riskDailyBar" style="width:0%;background:var(--red)"></div></div>
+              </div>
+              <div class="risk-meter">
+                <div style="font-size:9px;color:var(--text3);letter-spacing:1px">EXPOSICIÓN</div>
+                <div style="font-family:var(--sans);font-size:16px;font-weight:700" id="riskExposure">0%</div>
+                <div class="risk-bar-wrap"><div class="risk-bar" id="riskExpBar" style="width:0%;background:var(--yellow)"></div></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /bot-sidebar -->
+
+        <!-- BOT MAIN AREA -->
+        <div class="bot-main">
+
+          <!-- BOT HEADER CONTROLS -->
+          <div class="bot-controls">
+            <div id="botRunIndicator" style="width:8px;height:8px;border-radius:50%;background:var(--text3)"></div>
+            <div>
+              <div style="font-family:var(--sans);font-size:14px;font-weight:700;letter-spacing:2px" id="botStatusText">BOT DETENIDO</div>
+              <div style="font-size:9px;color:var(--text3);margin-top:1px" id="botStatusSub">Configura los parámetros y presiona INICIAR</div>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+              <button class="btn sm" onclick="runBacktest()">📊 BACKTEST</button>
+              <button class="btn sm" onclick="clearBotLog()">🗑 LIMPIAR</button>
+              <button class="btn-bot-start" id="botStartBtn" onclick="toggleBot()">▶ INICIAR BOT</button>
+            </div>
+          </div>
+
+          <!-- STATS -->
+          <div class="bot-stats">
+            <div class="bot-stat-card">
+              <div class="bsc-label">P&L Total</div>
+              <div class="bsc-val" id="statPnL" style="color:var(--text2)">$0.00</div>
+              <div class="bsc-sub" id="statPnLPct">+0.00%</div>
+            </div>
+            <div class="bot-stat-card">
+              <div class="bsc-label">Trades</div>
+              <div class="bsc-val" id="statTrades">0</div>
+              <div class="bsc-sub" id="statWinRate">Win rate: --</div>
+            </div>
+            <div class="bot-stat-card">
+              <div class="bsc-label">Mejor Trade</div>
+              <div class="bsc-val" id="statBest" style="color:var(--green)">$0.00</div>
+              <div class="bsc-sub" id="statBestPct">+0.00%</div>
+            </div>
+            <div class="bot-stat-card">
+              <div class="bsc-label">Peor Trade</div>
+              <div class="bsc-val" id="statWorst" style="color:var(--red)">$0.00</div>
+              <div class="bsc-sub" id="statWorstPct">-0.00%</div>
+            </div>
+          </div>
+
+          <!-- CHART WITH INDICATORS -->
+          <div class="chart-with-indicators">
+            <div style="padding:8px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--bg2)">
+              <span style="font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:2px" id="botChartTitle">BTC/USDT — 5M</span>
+              <span style="font-size:10px;color:var(--text3)" id="botChartInfo"></span>
+              <button class="btn sm" style="margin-left:auto" onclick="refreshBotChart()">↺</button>
+            </div>
+            <canvas id="botChart"></canvas>
+            <div style="padding:4px 12px;border-top:1px solid var(--border);background:var(--bg2);display:flex;gap:12px;font-size:9px;color:var(--text3)">
+              <span>RSI</span>
+            </div>
+            <canvas id="rsiChart"></canvas>
+            <div style="padding:4px 12px;border-top:1px solid var(--border);background:var(--bg2);display:flex;gap:12px;font-size:9px;color:var(--text3)">
+              <span>MACD</span>
+            </div>
+            <canvas id="macdChart"></canvas>
+          </div>
+
+          <!-- GRID VISUALIZATION (hidden unless grid strategy) -->
+          <div class="grid-viz" id="gridVizPanel" style="display:none">
+            <div style="font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--text2);margin-bottom:8px">VISUALIZACIÓN DE GRID</div>
+            <canvas id="gridCanvas"></canvas>
+          </div>
+
+          <!-- ARBITRAGE SCANNER (hidden unless arbi strategy) -->
+          <div id="arbiPanel" style="display:none">
+            <div class="section-h">🔄 Scanner de Arbitraje
+              <button class="btn sm" onclick="scanArbitrage()">ESCANEAR</button>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border)">
+              <div class="arbi-row log-header">
+                <span>Par</span><span>Precio</span><span>Ref Calc</span><span>Spread</span><span>Oport.</span>
+              </div>
+              <div id="arbiResults">
+                <div class="empty-state" style="padding:20px">Presiona ESCANEAR para buscar oportunidades</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TRADE LOG -->
+          <div>
+            <div class="section-h">📋 Log de Operaciones
+              <div style="display:flex;gap:8px;align-items:center">
+                <span class="badge green" id="logCount">0</span>
+                <button class="btn sm" onclick="exportLog()">⬇ CSV</button>
+              </div>
+            </div>
+            <div class="trade-log">
+              <div class="log-row log-header">
+                <span>Hora</span><span>Par</span><span>Lado</span><span>Precio</span><span>Qty</span><span>P&L</span><span>Motivo</span>
+              </div>
+              <div id="tradeLogBody">
+                <div class="empty-state">El log de operaciones aparecerá aquí cuando el bot ejecute trades</div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /bot-main -->
+      </div><!-- /bot-layout -->
+    </div><!-- /tab-bot -->
+
   </div>
 
   <!-- RIGHT SIDEBAR: Live Trades / WS -->
@@ -1819,14 +2586,16 @@ function updateTotals() {
 
 // ─── TABS ────────────────────────────────────────────
 function switchTab(name, btn) {
-  ['market','trade','orders','account'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t===name ? '' : 'none';
+  ['market','trade','orders','account','bot'].forEach(t => {
+    const el = document.getElementById('tab-'+t);
+    if (el) el.style.display = t===name ? '' : 'none';
   });
   document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 
   if (name === 'orders' && isAuthenticated) loadOrders();
   if (name === 'account' && isAuthenticated) loadBalances();
+  if (name === 'bot') initBotTab();
 }
 
 // ─── AUTO-REFRESH ────────────────────────────────────
@@ -1860,6 +2629,1172 @@ function changeProxy(val) {
   loadMarkets();
   setTimeout(() => selectSymbol('BTC_USDT'), 1500);
 })();
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 🤖 BOT ENGINE — Indicators, Strategies, Risk Management
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── BOT STATE ────────────────────────────────────────────────────────────────
+const botState = {
+  running: false,
+  strategy: 'grid',
+  paperMode: true,
+  paperBalance: 1000,
+  paperInitialBalance: 1000,
+  position: null,      // { side, entryPrice, qty, entryTime, trailMax }
+  trades: [],
+  dailyLoss: 0,
+  dailyStart: new Date().toDateString(),
+  klines: [],
+  indicators: { rsi: true, macd: true, bb: true, ema: true },
+  gridOrders: [],
+  dcaOrders: [],
+  dcaCount: 0,
+  lastDcaPrice: null,
+  lastDcaTime: null,
+  tickerInterval: null,
+  analysisInterval: null,
+  gridHigh: 0, gridLow: 0,
+  stopLossPrice: null,
+  takeProfitPrice: null,
+};
+
+// ─── INDICATOR CALCULATIONS ───────────────────────────────────────────────────
+
+function calcEMA(data, period) {
+  if (data.length < period) return Array(data.length).fill(null);
+  const k = 2 / (period + 1);
+  const result = Array(period - 1).fill(null);
+  let ema = data.slice(0, period).reduce((a, b) => a + b, 0) / period;
+  result.push(ema);
+  for (let i = period; i < data.length; i++) {
+    ema = data[i] * k + ema * (1 - k);
+    result.push(ema);
+  }
+  return result;
+}
+
+function calcSMA(data, period) {
+  return data.map((_, i) => {
+    if (i < period - 1) return null;
+    return data.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0) / period;
+  });
+}
+
+function calcRSI(closes, period = 14) {
+  if (closes.length < period + 1) return Array(closes.length).fill(null);
+  const result = Array(period).fill(null);
+  let gains = 0, losses = 0;
+  for (let i = 1; i <= period; i++) {
+    const diff = closes[i] - closes[i - 1];
+    if (diff > 0) gains += diff; else losses -= diff;
+  }
+  let avgGain = gains / period;
+  let avgLoss = losses / period;
+  const rs = avgLoss === 0 ? 100 : avgGain / avgLoss;
+  result.push(100 - 100 / (1 + rs));
+  for (let i = period + 1; i < closes.length; i++) {
+    const diff = closes[i] - closes[i - 1];
+    const gain = diff > 0 ? diff : 0;
+    const loss = diff < 0 ? -diff : 0;
+    avgGain = (avgGain * (period - 1) + gain) / period;
+    avgLoss = (avgLoss * (period - 1) + loss) / period;
+    const rsv = avgLoss === 0 ? 100 : avgGain / avgLoss;
+    result.push(100 - 100 / (1 + rsv));
+  }
+  return result;
+}
+
+function calcMACD(closes, fast = 12, slow = 26, signal = 9) {
+  const emaFast = calcEMA(closes, fast);
+  const emaSlow = calcEMA(closes, slow);
+  const macdLine = closes.map((_, i) => {
+    if (emaFast[i] === null || emaSlow[i] === null) return null;
+    return emaFast[i] - emaSlow[i];
+  });
+  const validMacd = macdLine.filter(v => v !== null);
+  const signalLineRaw = calcEMA(validMacd, signal);
+  const signalLine = Array(macdLine.length - signalLineRaw.length).fill(null).concat(signalLineRaw);
+  const histogram = macdLine.map((v, i) => {
+    if (v === null || signalLine[i] === null) return null;
+    return v - signalLine[i];
+  });
+  return { macdLine, signalLine, histogram };
+}
+
+function calcBollinger(closes, period = 20, mult = 2) {
+  return closes.map((_, i) => {
+    if (i < period - 1) return { upper: null, middle: null, lower: null };
+    const slice = closes.slice(i - period + 1, i + 1);
+    const mean = slice.reduce((a, b) => a + b, 0) / period;
+    const std = Math.sqrt(slice.reduce((a, b) => a + (b - mean) ** 2, 0) / period);
+    return { upper: mean + mult * std, middle: mean, lower: mean - mult * std };
+  });
+}
+
+function getSignalFromIndicators(closes, currentPrice) {
+  const signals = { rsi: 0, macd: 0, bb: 0, ema: 0 };
+
+  if (botState.indicators.rsi && closes.length > 15) {
+    const rsi = calcRSI(closes);
+    const lastRsi = rsi[rsi.length - 1];
+    const prevRsi = rsi[rsi.length - 2];
+    if (lastRsi !== null) {
+      const v = Math.round(lastRsi * 10) / 10;
+      const el = document.getElementById('rsi-val');
+      const sig = document.getElementById('rsi-sig');
+      const card = document.getElementById('ind-rsi');
+      if (el) el.textContent = v;
+      if (lastRsi < 30) {
+        signals.rsi = 1;
+        if (sig) { sig.textContent = '▲ COMPRAR'; sig.style.color = 'var(--green)'; }
+        if (card) { card.className = 'indicator-card enabled signal-buy'; }
+      } else if (lastRsi > 70) {
+        signals.rsi = -1;
+        if (sig) { sig.textContent = '▼ VENDER'; sig.style.color = 'var(--red)'; }
+        if (card) { card.className = 'indicator-card enabled signal-sell'; }
+      } else {
+        if (sig) { sig.textContent = 'NEUTRAL'; sig.style.color = 'var(--text3)'; }
+        if (card) { card.className = 'indicator-card enabled'; }
+      }
+    }
+  }
+
+  if (botState.indicators.macd && closes.length > 30) {
+    const { macdLine, signalLine, histogram } = calcMACD(closes);
+    const n = histogram.length;
+    const h = histogram[n - 1], h2 = histogram[n - 2];
+    const m = macdLine[n - 1];
+    const el = document.getElementById('macd-val');
+    const sig = document.getElementById('macd-sig');
+    const card = document.getElementById('ind-macd');
+    if (m !== null && el) el.textContent = m.toFixed(4);
+    if (h !== null && h2 !== null) {
+      if (h > 0 && h2 <= 0) {
+        signals.macd = 1;
+        if (sig) { sig.textContent = '▲ CRUCE ALCISTA'; sig.style.color = 'var(--green)'; }
+        if (card) card.className = 'indicator-card enabled signal-buy';
+      } else if (h < 0 && h2 >= 0) {
+        signals.macd = -1;
+        if (sig) { sig.textContent = '▼ CRUCE BAJISTA'; sig.style.color = 'var(--red)'; }
+        if (card) card.className = 'indicator-card enabled signal-sell';
+      } else {
+        if (sig) { sig.textContent = h > 0 ? 'TENDENCIA ▲' : 'TENDENCIA ▼'; sig.style.color = h > 0 ? 'var(--green)' : 'var(--red)'; }
+        if (card) card.className = 'indicator-card enabled';
+      }
+    }
+  }
+
+  if (botState.indicators.bb && closes.length > 22) {
+    const bb = calcBollinger(closes);
+    const last = bb[bb.length - 1];
+    const el = document.getElementById('bb-val');
+    const sig = document.getElementById('bb-sig');
+    const card = document.getElementById('ind-bb');
+    if (last.upper && el) {
+      const pct = ((currentPrice - last.lower) / (last.upper - last.lower) * 100).toFixed(0);
+      el.textContent = pct + '%';
+      if (currentPrice <= last.lower) {
+        signals.bb = 1;
+        if (sig) { sig.textContent = '▲ BANDA INFERIOR'; sig.style.color = 'var(--green)'; }
+        if (card) card.className = 'indicator-card enabled signal-buy';
+      } else if (currentPrice >= last.upper) {
+        signals.bb = -1;
+        if (sig) { sig.textContent = '▼ BANDA SUPERIOR'; sig.style.color = 'var(--red)'; }
+        if (card) card.className = 'indicator-card enabled signal-sell';
+      } else {
+        if (sig) { sig.textContent = `RANGO ${pct}%`; sig.style.color = 'var(--text2)'; }
+        if (card) card.className = 'indicator-card enabled';
+      }
+    }
+  }
+
+  if (botState.indicators.ema && closes.length > 25) {
+    const ema9 = calcEMA(closes, 9);
+    const ema21 = calcEMA(closes, 21);
+    const n = closes.length;
+    const e9 = ema9[n - 1], e21 = ema21[n - 1];
+    const e9p = ema9[n - 2], e21p = ema21[n - 2];
+    const el = document.getElementById('ema-val');
+    const sig = document.getElementById('ema-sig');
+    const card = document.getElementById('ind-ema');
+    if (e9 && e21 && el) {
+      el.textContent = fmtPrice(e9);
+      if (e9 > e21 && e9p <= e21p) {
+        signals.ema = 1;
+        if (sig) { sig.textContent = '▲ GOLDEN CROSS'; sig.style.color = 'var(--green)'; }
+        if (card) card.className = 'indicator-card enabled signal-buy';
+      } else if (e9 < e21 && e9p >= e21p) {
+        signals.ema = -1;
+        if (sig) { sig.textContent = '▼ DEATH CROSS'; sig.style.color = 'var(--red)'; }
+        if (card) card.className = 'indicator-card enabled signal-sell';
+      } else {
+        const trend = e9 > e21 ? 'EMA9 > EMA21 ▲' : 'EMA9 < EMA21 ▼';
+        if (sig) { sig.textContent = trend; sig.style.color = e9 > e21 ? 'var(--green)' : 'var(--red)'; }
+        if (card) card.className = 'indicator-card enabled';
+      }
+    }
+  }
+
+  const active = Object.keys(signals).filter(k => botState.indicators[k]);
+  const sum = active.reduce((a, k) => a + signals[k], 0);
+  const bulls = active.filter(k => signals[k] > 0).length;
+  const bears = active.filter(k => signals[k] < 0).length;
+  const strength = `${bulls}B / ${bears}S / ${active.length - bulls - bears}N`;
+
+  const el = document.getElementById('combinedSignal');
+  const str = document.getElementById('signalStrength');
+  if (str) str.textContent = strength;
+  if (el) {
+    if (sum >= 2) { el.className = 'signal-badge strong-buy'; el.textContent = '▲▲ COMPRA FUERTE'; }
+    else if (sum === 1) { el.className = 'signal-badge buy'; el.textContent = '▲ COMPRAR'; }
+    else if (sum <= -2) { el.className = 'signal-badge strong-sell'; el.textContent = '▼▼ VENTA FUERTE'; }
+    else if (sum === -1) { el.className = 'signal-badge sell'; el.textContent = '▼ VENDER'; }
+    else { el.className = 'signal-badge neutral'; el.textContent = '◆ NEUTRAL'; }
+  }
+
+  return { sum, signals, bulls, bears };
+}
+
+// ─── BOT CHART WITH INDICATORS ────────────────────────────────────────────────
+function drawBotChart(klines) {
+  if (!klines || klines.length < 2) return;
+  const closes = klines.map(k => parseFloat(k[4] || k.close || 0));
+  const highs  = klines.map(k => parseFloat(k[2] || k.high || 0));
+  const lows   = klines.map(k => parseFloat(k[3] || k.low || 0));
+
+  // Main chart
+  const canvas = document.getElementById('botChart');
+  if (!canvas) return;
+  const W = canvas.offsetWidth || 700;
+  const H = 240;
+  canvas.width = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+
+  const n = klines.length;
+  const padL = 8, padR = 60, padT = 10, padB = 10;
+  const cW = W - padL - padR;
+  const cH = H - padT - padB;
+
+  const bb = calcBollinger(closes);
+  const ema9 = calcEMA(closes, 9);
+  const ema21 = calcEMA(closes, 21);
+
+  const allVals = [...closes, ...highs, ...lows,
+    ...bb.filter(b => b.upper).map(b => b.upper),
+    ...bb.filter(b => b.lower).map(b => b.lower)].filter(v => v > 0);
+  const minP = Math.min(...allVals) * 0.9995;
+  const maxP = Math.max(...allVals) * 1.0005;
+
+  const toX = i => padL + (i / (n - 1)) * cW;
+  const toY = p => padT + cH - ((p - minP) / (maxP - minP)) * cH;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid
+  for (let i = 0; i <= 4; i++) {
+    const y = padT + (cH / 4) * i;
+    ctx.strokeStyle = '#1a2535'; ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+    const price = maxP - (maxP - minP) * (i / 4);
+    ctx.fillStyle = '#3d5570'; ctx.font = '9px Space Mono, monospace';
+    ctx.fillText(fmtPrice(price), W - padR + 4, y + 3);
+  }
+
+  // Bollinger bands
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(0,180,255,0.2)'; ctx.lineWidth = 1;
+  bb.forEach((b, i) => { if (b.upper) { i === 0 ? ctx.moveTo(toX(i), toY(b.upper)) : ctx.lineTo(toX(i), toY(b.upper)); } });
+  ctx.stroke();
+  ctx.beginPath();
+  bb.forEach((b, i) => { if (b.lower) { i === 0 ? ctx.moveTo(toX(i), toY(b.lower)) : ctx.lineTo(toX(i), toY(b.lower)); } });
+  ctx.stroke();
+
+  // Bollinger fill
+  ctx.beginPath();
+  const firstBB = bb.findIndex(b => b.upper);
+  bb.slice(firstBB).forEach((b, ii) => {
+    const i = ii + firstBB;
+    ii === 0 ? ctx.moveTo(toX(i), toY(b.upper)) : ctx.lineTo(toX(i), toY(b.upper));
+  });
+  [...bb].reverse().forEach((b, ii) => {
+    if (!b.lower) return;
+    const i = n - 1 - ii;
+    ctx.lineTo(toX(i), toY(b.lower));
+  });
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(0,180,255,0.03)';
+  ctx.fill();
+
+  // Candlesticks
+  const bw = Math.max(1.5, cW / n - 1);
+  klines.forEach((k, i) => {
+    const o = parseFloat(k[1] || k.open || closes[i]);
+    const h = parseFloat(k[2] || k.high || closes[i]);
+    const l = parseFloat(k[3] || k.low || closes[i]);
+    const c = parseFloat(k[4] || k.close || closes[i]);
+    const isUp = c >= o;
+    ctx.strokeStyle = isUp ? 'var(--green)' : 'var(--red)';
+    ctx.fillStyle = isUp ? 'rgba(0,229,160,0.6)' : 'rgba(255,69,96,0.6)';
+    ctx.lineWidth = 0.8;
+    const x = toX(i);
+    ctx.beginPath(); ctx.moveTo(x, toY(h)); ctx.lineTo(x, toY(l)); ctx.stroke();
+    const top = toY(Math.max(o, c));
+    const bot = toY(Math.min(o, c));
+    const barH = Math.max(1, bot - top);
+    ctx.fillRect(x - bw / 2, top, bw, barH);
+  });
+
+  // EMA 9 (yellow)
+  ctx.beginPath(); ctx.strokeStyle = 'rgba(245,197,24,0.8)'; ctx.lineWidth = 1.2;
+  ema9.forEach((v, i) => { if (v) { i === 0 ? ctx.moveTo(toX(i), toY(v)) : ctx.lineTo(toX(i), toY(v)); } });
+  ctx.stroke();
+
+  // EMA 21 (magenta)
+  ctx.beginPath(); ctx.strokeStyle = 'rgba(200,100,255,0.8)'; ctx.lineWidth = 1.2;
+  ema21.forEach((v, i) => { if (v) { i === 0 ? ctx.moveTo(toX(i), toY(v)) : ctx.lineTo(toX(i), toY(v)); } });
+  ctx.stroke();
+
+  // Trade markers from log
+  botState.trades.slice(-20).forEach(t => {
+    const idx = klines.findIndex(k => {
+      const kt = parseInt(k[0] || k.time || 0);
+      return Math.abs(kt - t.time) < 300000;
+    });
+    if (idx < 0) return;
+    const x = toX(idx), y = toY(t.price);
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = t.side === 'BUY' ? 'var(--green)' : 'var(--red)';
+    ctx.fill();
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 7px monospace';
+    ctx.fillText(t.side === 'BUY' ? 'B' : 'S', x - 2.5, y + 2.5);
+  });
+
+  // SL / TP lines
+  if (botState.stopLossPrice) {
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = 'rgba(255,69,96,0.6)'; ctx.lineWidth = 1;
+    const y = toY(botState.stopLossPrice);
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+    ctx.fillStyle = 'var(--red)'; ctx.font = '9px monospace';
+    ctx.fillText('SL ' + fmtPrice(botState.stopLossPrice), W - padR + 4, y + 3);
+    ctx.setLineDash([]);
+  }
+  if (botState.takeProfitPrice) {
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = 'rgba(0,229,160,0.6)'; ctx.lineWidth = 1;
+    const y = toY(botState.takeProfitPrice);
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+    ctx.fillStyle = 'var(--green)'; ctx.font = '9px monospace';
+    ctx.fillText('TP ' + fmtPrice(botState.takeProfitPrice), W - padR + 4, y + 3);
+    ctx.setLineDash([]);
+  }
+
+  // RSI chart
+  const rsiCanvas = document.getElementById('rsiChart');
+  if (rsiCanvas) drawRSIChart(rsiCanvas, calcRSI(closes), W);
+
+  // MACD chart
+  const macdCanvas = document.getElementById('macdChart');
+  if (macdCanvas) drawMACDChart(macdCanvas, calcMACD(closes), W);
+}
+
+function drawRSIChart(canvas, rsiData, W) {
+  const H = 70;
+  canvas.width = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  ctx.clearRect(0, 0, W, H);
+
+  const valid = rsiData.filter(v => v !== null);
+  const n = rsiData.length;
+  const padL = 8, padR = 60, padT = 4, padB = 4;
+  const cW = W - padL - padR;
+  const cH = H - padT - padB;
+  const toX = i => padL + (i / (n - 1)) * cW;
+  const toY = v => padT + cH - ((v - 0) / 100) * cH;
+
+  // OB/OS zones
+  ctx.fillStyle = 'rgba(255,69,96,0.06)';
+  ctx.fillRect(padL, padT, cW, cH * 0.3);
+  ctx.fillStyle = 'rgba(0,229,160,0.06)';
+  ctx.fillRect(padL, padT + cH * 0.7, cW, cH * 0.3);
+
+  // Lines at 30, 50, 70
+  [30, 50, 70].forEach(v => {
+    ctx.strokeStyle = v === 50 ? '#243040' : (v === 30 ? 'rgba(0,229,160,0.3)' : 'rgba(255,69,96,0.3)');
+    ctx.lineWidth = 0.5; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(padL, toY(v)); ctx.lineTo(W - padR, toY(v)); ctx.stroke();
+    ctx.fillStyle = '#3d5570'; ctx.font = '8px monospace';
+    ctx.fillText(v, W - padR + 4, toY(v) + 3);
+  });
+  ctx.setLineDash([]);
+
+  // RSI line
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(180,100,255,0.9)'; ctx.lineWidth = 1.2;
+  let started = false;
+  rsiData.forEach((v, i) => {
+    if (v === null) return;
+    if (!started) { ctx.moveTo(toX(i), toY(v)); started = true; }
+    else ctx.lineTo(toX(i), toY(v));
+  });
+  ctx.stroke();
+
+  // Current value label
+  const last = [...rsiData].reverse().find(v => v !== null);
+  if (last) {
+    ctx.fillStyle = 'rgba(180,100,255,0.9)'; ctx.font = 'bold 9px monospace';
+    ctx.fillText(last.toFixed(1), W - padR + 4, toY(last) + 3);
+  }
+}
+
+function drawMACDChart(canvas, macdData, W) {
+  const { macdLine, signalLine, histogram } = macdData;
+  const H = 70;
+  canvas.width = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  ctx.clearRect(0, 0, W, H);
+
+  const n = histogram.length;
+  const valid = histogram.filter(v => v !== null);
+  if (!valid.length) return;
+  const maxH = Math.max(...valid.map(Math.abs));
+  const padL = 8, padR = 60, padT = 4, padB = 4;
+  const cW = W - padL - padR;
+  const cH = H - padT - padB;
+  const toX = i => padL + (i / (n - 1)) * cW;
+  const toY = v => padT + cH / 2 - (v / (maxH || 1)) * (cH / 2);
+
+  // Zero line
+  ctx.strokeStyle = '#243040'; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(padL, padT + cH / 2); ctx.lineTo(W - padR, padT + cH / 2); ctx.stroke();
+
+  // Histogram bars
+  const bw = Math.max(1, cW / n - 0.5);
+  histogram.forEach((v, i) => {
+    if (v === null) return;
+    const x = toX(i);
+    const y = toY(v);
+    const base = padT + cH / 2;
+    ctx.fillStyle = v >= 0 ? 'rgba(0,229,160,0.5)' : 'rgba(255,69,96,0.5)';
+    ctx.fillRect(x - bw / 2, Math.min(y, base), bw, Math.abs(y - base));
+  });
+
+  // MACD line
+  ctx.beginPath(); ctx.strokeStyle = 'rgba(0,180,255,0.8)'; ctx.lineWidth = 1;
+  let started = false;
+  macdLine.forEach((v, i) => {
+    if (v === null) return;
+    if (!started) { ctx.moveTo(toX(i), toY(v)); started = true; }
+    else ctx.lineTo(toX(i), toY(v));
+  });
+  ctx.stroke();
+
+  // Signal line
+  ctx.beginPath(); ctx.strokeStyle = 'rgba(245,197,24,0.8)'; ctx.lineWidth = 1;
+  started = false;
+  signalLine.forEach((v, i) => {
+    if (v === null) return;
+    if (!started) { ctx.moveTo(toX(i), toY(v)); started = true; }
+    else ctx.lineTo(toX(i), toY(v));
+  });
+  ctx.stroke();
+
+  const lastM = [...macdLine].reverse().find(v => v !== null);
+  if (lastM) {
+    ctx.fillStyle = 'rgba(0,180,255,0.8)'; ctx.font = '8px monospace';
+    ctx.fillText(lastM.toFixed(4), W - padR + 4, padT + 10);
+  }
+}
+
+// ─── GRID VISUALIZATION ───────────────────────────────────────────────────────
+function drawGridVisualization(currentPrice) {
+  const canvas = document.getElementById('gridCanvas');
+  if (!canvas) return;
+  const W = canvas.offsetWidth || 600;
+  const H = 200;
+  canvas.width = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  ctx.clearRect(0, 0, W, H);
+
+  const low = botState.gridLow;
+  const high = botState.gridHigh;
+  const levels = parseInt(document.getElementById('grid-levels')?.value || 10);
+  const type = document.getElementById('grid-type')?.value || 'arithmetic';
+
+  if (!low || !high || low >= high) {
+    ctx.fillStyle = '#3d5570'; ctx.font = '11px monospace';
+    ctx.fillText('Configura precio mínimo y máximo del Grid', W / 2 - 150, H / 2);
+    return;
+  }
+
+  const gridPrices = [];
+  for (let i = 0; i <= levels; i++) {
+    if (type === 'arithmetic') {
+      gridPrices.push(low + (high - low) * (i / levels));
+    } else {
+      gridPrices.push(low * Math.pow(high / low, i / levels));
+    }
+  }
+
+  const pad = 30;
+  const cW = W - pad * 2;
+  const toX = p => pad + ((p - low) / (high - low)) * cW;
+
+  // Background
+  ctx.fillStyle = 'rgba(0,180,255,0.02)';
+  ctx.fillRect(pad, 0, cW, H);
+
+  // Grid lines
+  gridPrices.forEach((p, i) => {
+    const x = toX(p);
+    const isBuy = p < currentPrice;
+    ctx.strokeStyle = isBuy ? 'rgba(0,229,160,0.4)' : 'rgba(255,69,96,0.4)';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath(); ctx.moveTo(x, 10); ctx.lineTo(x, H - 10); ctx.stroke();
+
+    // Price label
+    ctx.fillStyle = isBuy ? 'var(--green)' : 'var(--red)';
+    ctx.font = '8px monospace';
+    if (i % Math.ceil(levels / 8) === 0 || i === 0 || i === levels) {
+      ctx.fillText(fmtPrice(p), x - 20, H - 3);
+    }
+
+    // Order dot
+    const hasOrder = botState.gridOrders.find(o => Math.abs(o.price - p) < 1);
+    ctx.beginPath();
+    ctx.arc(x, H / 2, 4, 0, Math.PI * 2);
+    ctx.fillStyle = hasOrder ? (isBuy ? 'var(--green)' : 'var(--red)') : '#243040';
+    ctx.fill();
+    if (hasOrder) {
+      ctx.strokeStyle = isBuy ? 'var(--green)' : 'var(--red)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  });
+
+  // Current price line
+  if (currentPrice >= low && currentPrice <= high) {
+    const x = toX(currentPrice);
+    ctx.strokeStyle = 'var(--yellow)'; ctx.lineWidth = 2;
+    ctx.setLineDash([5, 3]);
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'var(--yellow)'; ctx.font = 'bold 10px monospace';
+    ctx.fillText(fmtPrice(currentPrice), x - 25, 20);
+  }
+
+  // Legend
+  ctx.fillStyle = 'rgba(0,229,160,0.7)'; ctx.fillRect(pad, H - 26, 8, 8);
+  ctx.fillStyle = '#6b8099'; ctx.font = '9px monospace';
+  ctx.fillText('COMPRA', pad + 10, H - 19);
+  ctx.fillStyle = 'rgba(255,69,96,0.7)'; ctx.fillRect(pad + 70, H - 26, 8, 8);
+  ctx.fillText('VENTA', pad + 82, H - 19);
+}
+
+// ─── STRATEGY: GRID TRADING ───────────────────────────────────────────────────
+function initGridStrategy(currentPrice) {
+  const low = parseFloat(document.getElementById('grid-low')?.value);
+  const high = parseFloat(document.getElementById('grid-high')?.value);
+  const levels = parseInt(document.getElementById('grid-levels')?.value || 10);
+  const amount = parseFloat(document.getElementById('grid-amount')?.value || 50);
+  const type = document.getElementById('grid-type')?.value || 'arithmetic';
+
+  if (!low || !high || low >= high) {
+    notify('Grid: configura precio mínimo y máximo válidos', 'error'); return false;
+  }
+
+  botState.gridLow = low;
+  botState.gridHigh = high;
+  botState.gridOrders = [];
+
+  for (let i = 0; i <= levels; i++) {
+    const price = type === 'arithmetic'
+      ? low + (high - low) * (i / levels)
+      : low * Math.pow(high / low, i / levels);
+    const side = price < currentPrice ? 'BUY' : 'SELL';
+    if (Math.abs(price - currentPrice) / currentPrice > 0.001) {
+      botState.gridOrders.push({ price, side, amount, filled: false, id: 'grid_' + i });
+    }
+  }
+
+  botLogEntry({ time: Date.now(), side: 'INFO', price: currentPrice, qty: 0, pnl: 0, reason: `Grid init: ${botState.gridOrders.length} niveles [${fmtPrice(low)} - ${fmtPrice(high)}]` });
+  drawGridVisualization(currentPrice);
+  return true;
+}
+
+function tickGrid(currentPrice) {
+  let triggered = false;
+  botState.gridOrders.forEach(o => {
+    if (o.filled) return;
+    const hit = o.side === 'BUY' ? currentPrice <= o.price : currentPrice >= o.price;
+    if (hit) {
+      o.filled = true;
+      triggered = true;
+      const qty = o.amount / o.price;
+      if (o.side === 'BUY') {
+        botState.paperBalance -= o.amount;
+        const counterSell = botState.gridOrders.find(go => !go.filled && go.side === 'SELL' && go.price > o.price);
+        if (counterSell) {
+          const pnl = (counterSell.price - o.price) * qty;
+          botState.trades.push({ time: Date.now(), side: 'SELL', price: counterSell.price, qty, pnl, reason: 'Grid fill' });
+          botState.paperBalance += o.amount + pnl;
+          counterSell.filled = true;
+          botLogEntry({ time: Date.now(), side: 'BUY→SELL', price: o.price, qty, pnl, reason: `Grid: BUY@${fmtPrice(o.price)} → SELL@${fmtPrice(counterSell.price)}` });
+        }
+      }
+      setTimeout(() => { o.filled = false; }, 5000); // reset for continuous grid
+    }
+  });
+  drawGridVisualization(currentPrice);
+  return triggered;
+}
+
+// ─── STRATEGY: DCA ────────────────────────────────────────────────────────────
+function initDCAStrategy(currentPrice) {
+  botState.dcaOrders = [];
+  botState.dcaCount = 0;
+  botState.lastDcaPrice = currentPrice;
+  botState.lastDcaTime = Date.now();
+  botLogEntry({ time: Date.now(), side: 'INFO', price: currentPrice, qty: 0, pnl: 0, reason: `DCA iniciado @ ${fmtPrice(currentPrice)}` });
+  return true;
+}
+
+function tickDCA(currentPrice) {
+  const trigger = document.getElementById('dca-trigger')?.value || 'time';
+  const interval = parseInt(document.getElementById('dca-interval')?.value || 60) * 60000;
+  const dropPct = parseFloat(document.getElementById('dca-drop')?.value || 3) / 100;
+  const baseAmount = parseFloat(document.getElementById('dca-amount')?.value || 20);
+  const mult = parseFloat(document.getElementById('dca-mult')?.value || 1.5);
+  const maxOrders = parseInt(document.getElementById('dca-max')?.value || 5);
+  const rsiThreshold = 35;
+
+  if (botState.dcaCount >= maxOrders) return false;
+
+  let shouldBuy = false;
+  if (trigger === 'time' && Date.now() - botState.lastDcaTime >= interval) shouldBuy = true;
+  if (trigger === 'drop' && botState.lastDcaPrice && currentPrice <= botState.lastDcaPrice * (1 - dropPct)) shouldBuy = true;
+  if (trigger === 'rsi') {
+    const rsi = calcRSI(botState.klines.map(k => parseFloat(k[4] || k.close || 0)));
+    const lastRsi = rsi[rsi.length - 1];
+    if (lastRsi !== null && lastRsi < rsiThreshold) shouldBuy = true;
+  }
+
+  if (shouldBuy) {
+    const amount = baseAmount * Math.pow(mult, botState.dcaCount);
+    const qty = amount / currentPrice;
+    botState.dcaCount++;
+    botState.lastDcaPrice = currentPrice;
+    botState.lastDcaTime = Date.now();
+    botState.paperBalance -= amount;
+    botState.dcaOrders.push({ price: currentPrice, qty, amount, time: Date.now() });
+    botLogEntry({ time: Date.now(), side: 'BUY', price: currentPrice, qty, pnl: 0, reason: `DCA #${botState.dcaCount} @ ${fmtPrice(currentPrice)} ($${amount.toFixed(2)})` });
+    return true;
+  }
+  return false;
+}
+
+// ─── STRATEGY: SCALPING ───────────────────────────────────────────────────────
+function tickScalp(currentPrice, closes) {
+  const tpPct = parseFloat(document.getElementById('scalp-tp')?.value || 1.5) / 100;
+  const slPct = parseFloat(document.getElementById('scalp-sl')?.value || 0.8) / 100;
+  const size = parseFloat(document.getElementById('scalp-size')?.value || 100);
+  const signalType = document.getElementById('scalp-signal')?.value || 'combo';
+
+  // Check exit first
+  if (botState.position) {
+    const { entryPrice, side, qty } = botState.position;
+    let pnl = 0, exitReason = null;
+
+    // Trailing stop update
+    const trailPct = parseFloat(document.getElementById('risk-trail')?.value || 1.5) / 100;
+    if (trailPct > 0 && side === 'BUY') {
+      if (!botState.position.trailMax || currentPrice > botState.position.trailMax)
+        botState.position.trailMax = currentPrice;
+      const trailSL = botState.position.trailMax * (1 - trailPct);
+      if (currentPrice < trailSL) {
+        pnl = (currentPrice - entryPrice) * qty;
+        exitReason = `Trailing SL @${fmtPrice(trailSL)}`;
+      }
+    }
+
+    if (!exitReason && currentPrice >= botState.takeProfitPrice) {
+      pnl = (currentPrice - entryPrice) * qty;
+      exitReason = `TP @${fmtPrice(botState.takeProfitPrice)}`;
+    }
+    if (!exitReason && currentPrice <= botState.stopLossPrice) {
+      pnl = (currentPrice - entryPrice) * qty;
+      exitReason = `SL @${fmtPrice(botState.stopLossPrice)}`;
+    }
+
+    if (exitReason) {
+      botState.paperBalance += size + pnl;
+      const trade = { time: Date.now(), side: 'SELL', price: currentPrice, qty, pnl, reason: exitReason };
+      botState.trades.push(trade);
+      botLogEntry(trade);
+      botState.position = null;
+      botState.stopLossPrice = null;
+      botState.takeProfitPrice = null;
+      botState.dailyLoss += pnl < 0 ? Math.abs(pnl) : 0;
+      updateBotStats();
+      return;
+    }
+  }
+
+  // Check entry
+  if (!botState.position && botState.paperBalance >= size) {
+    const { sum, signals } = getSignalFromIndicators(closes, currentPrice);
+    let enterLong = false;
+
+    if (signalType === 'rsi') enterLong = signals.rsi > 0;
+    else if (signalType === 'macd') enterLong = signals.macd > 0;
+    else if (signalType === 'bb') enterLong = signals.bb > 0;
+    else if (signalType === 'ema') enterLong = signals.ema > 0;
+    else if (signalType === 'combo') enterLong = sum >= 2;
+
+    if (enterLong) {
+      const qty = size / currentPrice;
+      botState.paperBalance -= size;
+      botState.position = { side: 'BUY', entryPrice: currentPrice, qty, entryTime: Date.now(), trailMax: currentPrice };
+      botState.stopLossPrice = currentPrice * (1 - slPct);
+      botState.takeProfitPrice = currentPrice * (1 + tpPct);
+      const trade = { time: Date.now(), side: 'BUY', price: currentPrice, qty, pnl: 0, reason: `Scalp entry (signal:${sum})` };
+      botState.trades.push(trade);
+      botLogEntry(trade);
+      updateBotStats();
+    }
+  }
+}
+
+// ─── STRATEGY: ARBITRAGE ─────────────────────────────────────────────────────
+async function scanArbitrage() {
+  const base = document.getElementById('arbi-base')?.value || 'BTC_USDT';
+  const pair2 = document.getElementById('arbi-pair2')?.value || 'ETH_USDT';
+  const minSpread = parseFloat(document.getElementById('arbi-spread')?.value || 0.3) / 100;
+
+  try {
+    const symbols = [base, pair2, 'ETH_BTC'].filter(Boolean);
+    const results = await Promise.all(symbols.map(s =>
+      publicRequest('/api/v1/market/tickers', { symbol: s }).catch(() => null)
+    ));
+
+    const tickers = {};
+    results.forEach((r, i) => {
+      if (r && r.data && r.data.tickers && r.data.tickers[0]) {
+        tickers[symbols[i]] = parseFloat(r.data.tickers[0].close);
+      }
+    });
+
+    const rows = [];
+    const btcUsdt = tickers['BTC_USDT'];
+    const ethUsdt = tickers['ETH_USDT'];
+    const ethBtc  = tickers['ETH_BTC'];
+
+    if (btcUsdt && ethUsdt && ethBtc) {
+      const impliedEthUsdt = ethBtc * btcUsdt;
+      const spread = Math.abs(ethUsdt - impliedEthUsdt) / ethUsdt;
+      const isOpport = spread >= minSpread;
+      rows.push({ sym: 'ETH/BTC→USDT', price: ethUsdt, ref: impliedEthUsdt, spread, isOpport,
+        hint: isOpport ? (ethUsdt > impliedEthUsdt ? 'SELL ETH→BUY ETH/BTC' : 'BUY ETH→SELL ETH/BTC') : '-' });
+    }
+
+    if (!rows.length) {
+      document.getElementById('arbiResults').innerHTML =
+        '<div class="empty-state" style="padding:20px">Sin datos suficientes. Verifica los pares.</div>';
+      return;
+    }
+
+    const html = rows.map(r => `
+      <div class="arbi-row ${r.isOpport ? 'arbi-opport' : ''}">
+        <span>${r.sym}</span>
+        <span>${fmtPrice(r.price)}</span>
+        <span>${fmtPrice(r.ref)}</span>
+        <span class="${r.isOpport ? 'up' : 'dn'}">${(r.spread * 100).toFixed(3)}%</span>
+        <span style="color:var(--yellow);font-size:9px">${r.hint}</span>
+      </div>`).join('');
+    document.getElementById('arbiResults').innerHTML = html;
+    if (rows.some(r => r.isOpport)) notify('¡Oportunidad de arbitraje detectada!', 'success');
+  } catch(e) {
+    notify('Error escaneando arbitraje: ' + e.message, 'error');
+  }
+}
+
+// ─── RISK MANAGEMENT ─────────────────────────────────────────────────────────
+function checkRiskLimits(currentPrice) {
+  const maxDailyLoss = parseFloat(document.getElementById('risk-daily')?.value || 5) / 100;
+  const initialBalance = botState.paperInitialBalance;
+
+  // Reset daily loss counter if new day
+  if (new Date().toDateString() !== botState.dailyStart) {
+    botState.dailyStart = new Date().toDateString();
+    botState.dailyLoss = 0;
+  }
+
+  const dailyLossPct = botState.dailyLoss / initialBalance;
+  const el = document.getElementById('riskDailyLoss');
+  const bar = document.getElementById('riskDailyBar');
+  if (el) el.textContent = '$' + botState.dailyLoss.toFixed(2);
+  if (bar) bar.style.width = Math.min(100, dailyLossPct / maxDailyLoss * 100) + '%';
+
+  if (dailyLossPct >= maxDailyLoss) {
+    notify(`⛔ Límite de pérdida diaria alcanzado (${(dailyLossPct * 100).toFixed(1)}%). Bot detenido.`, 'error', 8000);
+    stopBot();
+    return false;
+  }
+
+  // Exposure
+  const exposure = botState.position
+    ? ((botState.position.qty * currentPrice) / (botState.paperBalance + botState.position.qty * currentPrice) * 100)
+    : 0;
+  const expEl = document.getElementById('riskExposure');
+  const expBar = document.getElementById('riskExpBar');
+  if (expEl) expEl.textContent = exposure.toFixed(0) + '%';
+  if (expBar) expBar.style.width = Math.min(100, exposure) + '%';
+
+  return true;
+}
+
+function getDynamicPositionSize(currentPrice) {
+  const riskPct = parseFloat(document.getElementById('risk-size')?.value || 10) / 100;
+  return botState.paperBalance * riskPct;
+}
+
+// ─── TRADE LOG ────────────────────────────────────────────────────────────────
+function botLogEntry(trade) {
+  const body = document.getElementById('tradeLogBody');
+  if (!body) return;
+  if (body.querySelector('.empty-state')) body.innerHTML = '';
+
+  const pnl = trade.pnl || 0;
+  const pnlColor = pnl > 0 ? 'var(--green)' : pnl < 0 ? 'var(--red)' : 'var(--text3)';
+  const sideColor = trade.side === 'BUY' || trade.side === 'INFO' ? 'var(--blue)' :
+                    trade.side.includes('SELL') ? 'var(--red)' : 'var(--green)';
+  const tag = botState.paperMode ? '<span style="color:var(--yellow);font-size:8px">[SIM]</span> ' : '';
+
+  const row = document.createElement('div');
+  row.className = 'log-row';
+  row.innerHTML = `
+    <span style="color:var(--text3)">${new Date(trade.time).toLocaleTimeString('es',{hour12:false})}</span>
+    <span>${currentSymbol}</span>
+    <span style="color:${sideColor};font-weight:700">${tag}${trade.side}</span>
+    <span>${trade.price > 0 ? fmtPrice(trade.price) : '-'}</span>
+    <span style="color:var(--text2)">${trade.qty > 0 ? trade.qty.toFixed(5) : '-'}</span>
+    <span style="color:${pnlColor}">${pnl !== 0 ? (pnl > 0 ? '+' : '') + '$' + pnl.toFixed(2) : '-'}</span>
+    <span style="color:var(--text3)">${trade.reason}</span>
+  `;
+  body.insertBefore(row, body.firstChild);
+
+  const count = document.getElementById('logCount');
+  if (count) count.textContent = body.querySelectorAll('.log-row').length;
+}
+
+function clearBotLog() {
+  const body = document.getElementById('tradeLogBody');
+  if (body) body.innerHTML = '<div class="empty-state">Log limpiado.</div>';
+  const count = document.getElementById('logCount');
+  if (count) count.textContent = '0';
+}
+
+function exportLog() {
+  if (!botState.trades.length) { notify('No hay trades para exportar', 'error'); return; }
+  const header = 'Hora,Par,Lado,Precio,Cantidad,PnL,Motivo
+';
+  const rows = botState.trades.map(t =>
+    `${new Date(t.time).toISOString()},${currentSymbol},${t.side},${t.price},${t.qty},${t.pnl},${t.reason}`
+  ).join('
+');
+  const blob = new Blob([header + rows], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `pionex_bot_log_${Date.now()}.csv`;
+  a.click();
+}
+
+// ─── STATS ────────────────────────────────────────────────────────────────────
+function updateBotStats() {
+  const trades = botState.trades.filter(t => t.pnl !== 0);
+  const totalPnL = trades.reduce((a, t) => a + (t.pnl || 0), 0);
+  const wins = trades.filter(t => t.pnl > 0);
+  const losses = trades.filter(t => t.pnl < 0);
+  const winRate = trades.length ? (wins.length / trades.length * 100).toFixed(0) : 0;
+  const best = wins.length ? Math.max(...wins.map(t => t.pnl)) : 0;
+  const worst = losses.length ? Math.min(...losses.map(t => t.pnl)) : 0;
+  const pnlPct = (totalPnL / botState.paperInitialBalance * 100).toFixed(2);
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const setC = (id, col) => { const el = document.getElementById(id); if (el) el.style.color = col; };
+
+  set('statPnL', (totalPnL >= 0 ? '+' : '') + '$' + totalPnL.toFixed(2));
+  setC('statPnL', totalPnL > 0 ? 'var(--green)' : totalPnL < 0 ? 'var(--red)' : 'var(--text2)');
+  set('statPnLPct', (totalPnL >= 0 ? '+' : '') + pnlPct + '%');
+  set('statTrades', botState.trades.length);
+  set('statWinRate', `Win rate: ${winRate}%`);
+  set('statBest', '$' + best.toFixed(2));
+  set('statWorst', '$' + Math.abs(worst).toFixed(2));
+}
+
+// ─── BOT TICK ─────────────────────────────────────────────────────────────────
+let botTickCount = 0;
+
+async function botTick() {
+  if (!botState.running) return;
+  botTickCount++;
+
+  try {
+    // Fetch latest price
+    const tickerData = await publicRequest('/api/v1/market/tickers', { symbol: currentSymbol });
+    if (!tickerData.data || !tickerData.data.tickers) return;
+    const currentPrice = parseFloat(tickerData.data.tickers[0].close);
+
+    // Fetch klines if needed
+    if (botTickCount % 5 === 1 || botState.klines.length === 0) {
+      const interval = document.getElementById('scalp-interval')?.value || '5M';
+      const kData = await publicRequest('/api/v1/market/klines', { symbol: currentSymbol, interval, limit: 100 });
+      if (kData.data && kData.data.klines) {
+        botState.klines = kData.data.klines;
+        drawBotChart(botState.klines);
+      }
+    }
+
+    const closes = botState.klines.map(k => parseFloat(k[4] || k.close || 0));
+    closes.push(currentPrice);
+
+    // Update indicators
+    if (closes.length > 14) getSignalFromIndicators(closes, currentPrice);
+
+    // Risk check
+    if (!checkRiskLimits(currentPrice)) return;
+
+    // Execute strategy
+    switch (botState.strategy) {
+      case 'grid':  tickGrid(currentPrice); break;
+      case 'dca':   tickDCA(currentPrice); break;
+      case 'scalp': tickScalp(currentPrice, closes); break;
+      case 'arbi':  if (botTickCount % 10 === 0) scanArbitrage(); break;
+    }
+
+    // Update stats
+    if (botTickCount % 3 === 0) updateBotStats();
+
+    // Update paper balance display
+    const sub = document.getElementById('botStatusSub');
+    if (sub) {
+      const currentValue = botState.paperBalance + (botState.position ? botState.position.qty * currentPrice : 0);
+      sub.textContent = `Balance: $${botState.paperBalance.toFixed(2)} | ${botState.position ? '📈 EN POSICIÓN' : '⏳ EN ESPERA'} | Tick #${botTickCount}`;
+    }
+
+  } catch(e) {
+    console.error('Bot tick error:', e);
+  }
+}
+
+// ─── BOT CONTROL ─────────────────────────────────────────────────────────────
+async function toggleBot() {
+  if (botState.running) {
+    stopBot();
+  } else {
+    await startBot();
+  }
+}
+
+async function startBot() {
+  if (!botState.paperMode && !isAuthenticated) {
+    notify('Conecta tu API Key para trading real', 'error'); return;
+  }
+
+  // Read paper settings
+  botState.paperMode = document.getElementById('paperMode')?.checked !== false;
+  botState.paperBalance = parseFloat(document.getElementById('paperBalance')?.value || 1000);
+  botState.paperInitialBalance = botState.paperBalance;
+  botState.trades = [];
+  botState.dailyLoss = 0;
+  botState.position = null;
+  botState.stopLossPrice = null;
+  botState.takeProfitPrice = null;
+
+  // Initialize strategy
+  let initOk = false;
+  try {
+    const tickerData = await publicRequest('/api/v1/market/tickers', { symbol: currentSymbol });
+    const currentPrice = parseFloat(tickerData.data.tickers[0].close);
+
+    switch (botState.strategy) {
+      case 'grid':  initOk = initGridStrategy(currentPrice); break;
+      case 'dca':   initOk = initDCAStrategy(currentPrice); break;
+      case 'scalp': initOk = true; break;
+      case 'arbi':  initOk = true; break;
+    }
+  } catch(e) {
+    notify('Error iniciando bot: ' + e.message, 'error'); return;
+  }
+
+  if (!initOk) return;
+
+  botState.running = true;
+  const tickInterval = botState.strategy === 'scalp' ? 10000 : 15000;
+  botState.analysisInterval = setInterval(botTick, tickInterval);
+  botTick(); // immediate first tick
+
+  // Update UI
+  const btn = document.getElementById('botStartBtn');
+  const ind = document.getElementById('botRunIndicator');
+  const txt = document.getElementById('botStatusText');
+  if (btn) { btn.textContent = '⏹ DETENER BOT'; btn.className = 'btn-bot-start running'; }
+  if (ind) { ind.style.background = 'var(--blue)'; ind.style.animation = 'botPulse 1.5s infinite'; }
+  if (txt) txt.textContent = `BOT ACTIVO — ${botState.strategy.toUpperCase()} ${botState.paperMode ? '(PAPER)' : '(REAL)'}`;
+
+  const modeStr = botState.paperMode ? '🟡 PAPER TRADING' : '🔴 TRADING REAL';
+  notify(`Bot ${botState.strategy.toUpperCase()} iniciado. ${modeStr}`, 'success', 5000);
+}
+
+function stopBot() {
+  botState.running = false;
+  if (botState.analysisInterval) { clearInterval(botState.analysisInterval); botState.analysisInterval = null; }
+
+  const btn = document.getElementById('botStartBtn');
+  const ind = document.getElementById('botRunIndicator');
+  const txt = document.getElementById('botStatusText');
+  const sub = document.getElementById('botStatusSub');
+  if (btn) { btn.textContent = '▶ INICIAR BOT'; btn.className = 'btn-bot-start'; }
+  if (ind) { ind.style.background = 'var(--text3)'; ind.style.animation = 'none'; }
+  if (txt) txt.textContent = 'BOT DETENIDO';
+  if (sub) sub.textContent = 'Bot detenido. Revisa el log de operaciones.';
+
+  updateBotStats();
+  notify('Bot detenido.', 'info');
+}
+
+// ─── BACKTEST ─────────────────────────────────────────────────────────────────
+async function runBacktest() {
+  notify('Cargando datos para backtest...', 'info', 3000);
+  try {
+    const interval = document.getElementById('scalp-interval')?.value || '1H';
+    const kData = await publicRequest('/api/v1/market/klines', { symbol: currentSymbol, interval, limit: 200 });
+    if (!kData.data || !kData.data.klines) { notify('Sin datos para backtest', 'error'); return; }
+    const klines = kData.data.klines;
+    const closes = klines.map(k => parseFloat(k[4] || k.close || 0));
+
+    let btBalance = parseFloat(document.getElementById('paperBalance')?.value || 1000);
+    const btInitial = btBalance;
+    const tpPct = parseFloat(document.getElementById('scalp-tp')?.value || 1.5) / 100;
+    const slPct = parseFloat(document.getElementById('scalp-sl')?.value || 0.8) / 100;
+    const size = btBalance * 0.1;
+    let pos = null, wins = 0, losses = 0, trades = 0;
+
+    for (let i = 30; i < closes.length; i++) {
+      const slice = closes.slice(0, i + 1);
+      const price = closes[i];
+      const { sum } = getSignalFromIndicators(slice, price);
+
+      if (!pos && sum >= 2 && btBalance >= size) {
+        pos = { entry: price, tp: price * (1 + tpPct), sl: price * (1 - slPct), qty: size / price };
+        btBalance -= size;
+        trades++;
+      } else if (pos) {
+        if (price >= pos.tp) {
+          const pnl = (pos.tp - pos.entry) * pos.qty;
+          btBalance += size + pnl;
+          wins++;
+          pos = null;
+        } else if (price <= pos.sl) {
+          const pnl = (pos.sl - pos.entry) * pos.qty;
+          btBalance += size + pnl;
+          losses++;
+          pos = null;
+        }
+      }
+    }
+
+    const pnl = btBalance - btInitial;
+    const wr = trades ? (wins / trades * 100).toFixed(0) : 0;
+    notify(`📊 Backtest (${klines.length} velas): P&L ${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} | ${trades} trades | Win rate: ${wr}%`, pnl >= 0 ? 'success' : 'error', 10000);
+    botLogEntry({ time: Date.now(), side: 'BACKTEST', price: closes[closes.length-1], qty: 0,
+      pnl, reason: `${trades} trades, ${wins}W/${losses}L, WR:${wr}%, Final:$${btBalance.toFixed(2)}` });
+  } catch(e) {
+    notify('Error en backtest: ' + e.message, 'error');
+  }
+}
+
+// ─── BOT UI HELPERS ───────────────────────────────────────────────────────────
+function selectStrategy(name, btn) {
+  botState.strategy = name;
+  document.querySelectorAll('.strat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.strat-config').forEach(c => c.classList.remove('active'));
+  const cfg = document.getElementById('config-' + name);
+  if (cfg) cfg.classList.add('active');
+  const gridViz = document.getElementById('gridVizPanel');
+  const arbiPanel = document.getElementById('arbiPanel');
+  if (gridViz) gridViz.style.display = name === 'grid' ? '' : 'none';
+  if (arbiPanel) arbiPanel.style.display = name === 'arbi' ? '' : 'none';
+}
+
+function toggleIndicator(name) {
+  botState.indicators[name] = !botState.indicators[name];
+  const toggle = document.getElementById('ind-' + name + '-toggle');
+  if (toggle) toggle.className = 'ind-toggle ' + (botState.indicators[name] ? 'on' : '');
+}
+
+function previewGrid() {
+  const low = parseFloat(document.getElementById('grid-low')?.value);
+  const high = parseFloat(document.getElementById('grid-high')?.value);
+  if (!low || !high || low >= high) { notify('Ingresa rango de precios válido', 'error'); return; }
+  botState.gridLow = low;
+  botState.gridHigh = high;
+  document.getElementById('gridVizPanel').style.display = '';
+  const lastPrice = parseFloat(allTickers[currentSymbol]?.close || low + (high - low) / 2);
+  drawGridVisualization(lastPrice);
+  const levels = parseInt(document.getElementById('grid-levels')?.value || 10);
+  const amount = parseFloat(document.getElementById('grid-amount')?.value || 50);
+  notify(`Grid preview: ${levels} niveles, $${(levels * amount).toFixed(0)} inversión total`, 'info');
+}
+
+async function refreshBotChart() {
+  try {
+    const interval = document.getElementById('scalp-interval')?.value || '5M';
+    const kData = await publicRequest('/api/v1/market/klines', { symbol: currentSymbol, interval, limit: 100 });
+    if (kData.data && kData.data.klines) {
+      botState.klines = kData.data.klines;
+      drawBotChart(botState.klines);
+      const closes = botState.klines.map(k => parseFloat(k[4] || k.close || 0));
+      getSignalFromIndicators(closes, closes[closes.length - 1]);
+    }
+    const t = document.getElementById('botChartTitle');
+    if (t) t.textContent = `${currentSymbol.replace('_','/')} — ${interval}`;
+  } catch(e) { notify('Error: ' + e.message, 'error'); }
+}
+
+document.getElementById('paperMode')?.addEventListener('change', function() {
+  const lbl = document.getElementById('paperLabel');
+  const row = document.getElementById('paperBalanceRow');
+  if (lbl) lbl.textContent = this.checked ? 'ACTIVO' : 'DESACTIVADO';
+  if (row) row.style.display = this.checked ? '' : 'none';
+  botState.paperMode = this.checked;
+});
+
+async function initBotTab() {
+  await refreshBotChart();
+}
+
 </script>
 </body>
 </html>
