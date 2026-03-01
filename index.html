@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pionex Terminal</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060a0f;
+    --bg2: #0b1118;
+    --bg3: #111820;
+    --border: #1a2535;
+    --border2: #243040;
+    --green: #00e5a0;
+    --green2: #00b87a;
+    --red: #ff4560;
+    --blue: #00b4ff;
+    --yellow: #f5c518;
+    --text: #cdd6e0;
+    --text2: #6b8099;
+    --text3: #3d5570;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Rajdhani', sans-serif;
+    --glow: 0 0 20px rgba(0, 229, 160, 0.15);
+    --glow2: 0 0 40px rgba(0, 229, 160, 0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 52px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--green);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #000;
+    font-weight: 700;
+    font-family: var(--sans);
+  }
+
+  .logo-text {
+    font-family: var(--sans);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--green);
+    text-transform: uppercase;
+  }
+
+  .logo-version {
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    margin-top: 2px;
+  }
+
+  .header-status {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  .status-dot.red { background: var(--red); box-shadow: 0 0 8px var(--red); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .server-time {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text2);
+    letter-spacing: 1px;
+  }
+
+  /* API CONFIG BAR */
+  .api-bar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .api-bar label {
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .api-input {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 10px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 220px;
+  }
+
+  .api-input:focus { border-color: var(--green); box-shadow: var(--glow); }
+
+  .btn {
+    background: transparent;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .btn:hover { background: var(--green); color: #000; box-shadow: var(--glow); }
+  .btn.red { border-color: var(--red); color: var(--red); }
+  .btn.red:hover { background: var(--red); color: #fff; }
+  .btn.blue { border-color: var(--blue); color: var(--blue); }
+  .btn.blue:hover { background: var(--blue); color: #000; }
+  .btn.sm { padding: 3px 8px; font-size: 9px; }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* TICKER STRIP */
+  .ticker-strip {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    height: 30px;
+    position: relative;
+  }
+
+  .ticker-scroll {
+    display: flex;
+    animation: scrollTicker 60s linear infinite;
+    white-space: nowrap;
+    height: 100%;
+    align-items: center;
+  }
+
+  .ticker-scroll:hover { animation-play-state: paused; }
+
+  @keyframes scrollTicker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px;
+    border-right: 1px solid var(--border);
+    height: 100%;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .ticker-item:hover { background: var(--border); }
+  .ticker-item .sym { color: var(--text); font-size: 11px; font-weight: 700; }
+  .ticker-item .price { font-size: 11px; }
+  .ticker-item .chg { font-size: 10px; }
+  .up { color: var(--green); }
+  .dn { color: var(--red); }
+
+  /* MAIN LAYOUT */
+  .app-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr 280px;
+    grid-template-rows: auto 1fr;
+    height: calc(100vh - 130px);
+    gap: 0;
+  }
+
+  /* SIDEBAR LEFT */
+  .sidebar {
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: var(--bg); }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border2); }
+
+  .panel-title {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 10px 14px 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .search-box {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 10px;
+    outline: none;
+  }
+
+  .search-input:focus { border-color: var(--green); }
+
+  .symbol-list { flex: 1; }
+
+  .symbol-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(26,37,53,0.5);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .symbol-item:hover { background: var(--bg3); }
+  .symbol-item.active { background: var(--border); border-left: 2px solid var(--green); }
+
+  .sym-name { font-size: 12px; color: var(--text); font-weight: 700; }
+  .sym-base { font-size: 10px; color: var(--text3); margin-top: 1px; }
+  .sym-price { font-size: 11px; text-align: right; }
+  .sym-change { font-size: 10px; text-align: right; margin-top: 1px; }
+
+  /* CENTER AREA */
+  .center {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 20px;
+    cursor: pointer;
+    color: var(--text3);
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--green); border-bottom-color: var(--green); }
+
+  /* TAB CONTENT */
+  .tab-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+  }
+
+  .tab-content::-webkit-scrollbar { width: 4px; }
+  .tab-content::-webkit-scrollbar-thumb { background: var(--border2); }
+
+  /* MARKET TAB */
+  .chart-placeholder {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .chart-title {
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    font-family: var(--sans);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .chart-price {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    text-align: right;
+  }
+
+  .chart-price .big { font-size: 24px; font-weight: 700; }
+  .chart-price .sub { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+  canvas#priceChart {
+    width: 100% !important;
+    height: 260px !important;
+    margin-top: 40px;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  .stat-box {
+    background: var(--bg2);
+    padding: 10px 14px;
+  }
+
+  .stat-label { font-size: 9px; color: var(--text3); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .stat-val { font-size: 14px; font-family: var(--sans); font-weight: 600; }
+
+  /* ORDERBOOK */
+  .orderbook-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .ob-panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .ob-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 6px 10px;
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+  }
+
+  .ob-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 3px 10px;
+    font-size: 11px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .ob-row:hover { background: var(--border); }
+
+  .ob-bar {
+    position: absolute;
+    top: 0; bottom: 0;
+    opacity: 0.08;
+    transition: width 0.3s;
+  }
+
+  .ob-bar.ask { background: var(--red); right: 0; }
+  .ob-bar.bid { background: var(--green); right: 0; }
+
+  /* TRADES TABLE */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+
+  .data-table th {
+    background: var(--bg3);
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 400;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+  }
+
+  .data-table td {
+    padding: 7px 12px;
+    border-bottom: 1px solid rgba(26,37,53,0.5);
+    font-family: var(--mono);
+  }
+
+  .data-table tr:hover td { background: var(--bg3); }
+  .data-table tr:hover td:first-child { border-left: 2px solid var(--green); }
+
+  /* TRADE FORM */
+  .trade-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .form-panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 16px;
+  }
+
+  .form-panel.buy { border-top: 2px solid var(--green); }
+  .form-panel.sell { border-top: 2px solid var(--red); }
+
+  .form-title {
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+
+  .form-title.buy { color: var(--green); }
+  .form-title.sell { color: var(--red); }
+
+  .form-group { margin-bottom: 12px; }
+
+  .form-label {
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .form-input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input:focus { border-color: var(--green); box-shadow: var(--glow); }
+
+  .form-select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 12px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .form-select:focus { border-color: var(--green); }
+
+  .amount-hint {
+    font-size: 10px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  .btn-trade {
+    width: 100%;
+    padding: 12px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .btn-buy { background: var(--green); color: #000; }
+  .btn-buy:hover { background: var(--green2); box-shadow: 0 4px 20px rgba(0,229,160,0.3); }
+  .btn-sell { background: var(--red); color: #fff; }
+  .btn-sell:hover { background: #cc2040; box-shadow: 0 4px 20px rgba(255,69,96,0.3); }
+
+  /* ACCOUNT PANEL */
+  .balance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .balance-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .balance-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--green);
+  }
+
+  .balance-coin {
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .balance-amount {
+    font-size: 14px;
+    color: var(--green);
+    margin-bottom: 3px;
+  }
+
+  .balance-frozen {
+    font-size: 10px;
+    color: var(--text3);
+  }
+
+  /* SIDEBAR RIGHT */
+  .sidebar-right {
+    background: var(--bg2);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .live-trades {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .live-trades::-webkit-scrollbar { width: 3px; }
+  .live-trades::-webkit-scrollbar-thumb { background: var(--border2); }
+
+  .trade-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 5px 12px;
+    font-size: 11px;
+    border-bottom: 1px solid rgba(26,37,53,0.3);
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; background: rgba(0,229,160,0.05); }
+    to { opacity: 1; background: transparent; }
+  }
+
+  .trade-time { color: var(--text3); font-size: 10px; }
+
+  /* NOTIFICATIONS */
+  .notif-area {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .notif {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    padding: 10px 16px;
+    font-size: 11px;
+    max-width: 300px;
+    animation: slideIn 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .notif.success { border-left: 3px solid var(--green); }
+  .notif.error { border-left: 3px solid var(--red); }
+  .notif.info { border-left: 3px solid var(--blue); }
+
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  /* LOADING */
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    color: var(--text3);
+    gap: 10px;
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  /* RESPONSIVE ADJUSTMENTS */
+  @media (max-width: 1200px) {
+    .app-layout { grid-template-columns: 200px 1fr 240px; }
+  }
+
+  @media (max-width: 900px) {
+    .app-layout { grid-template-columns: 1fr; }
+    .sidebar, .sidebar-right { display: none; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 30px;
+    color: var(--text3);
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+
+  .empty-state .icon { font-size: 32px; margin-bottom: 10px; }
+
+  /* SECTION HEADERS */
+  .section-h {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin: 16px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .badge {
+    background: var(--border);
+    color: var(--text3);
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+
+  .badge.green { background: rgba(0,229,160,0.1); color: var(--green); }
+
+  /* KLINE INTERVALS */
+  .interval-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  .interval-btn {
+    font-size: 10px;
+    padding: 3px 8px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    cursor: pointer;
+    font-family: var(--mono);
+    transition: all 0.15s;
+  }
+
+  .interval-btn.active, .interval-btn:hover {
+    border-color: var(--green);
+    color: var(--green);
+    background: rgba(0,229,160,0.05);
+  }
+
+  .text-right { text-align: right; }
+  .text-mono { font-family: var(--mono); }
+
+  .flex-center { display: flex; align-items: center; gap: 8px; }
+
+  .separator {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  /* Order status badges */
+  .status-open { color: var(--blue); }
+  .status-closed { color: var(--text3); }
+  .status-filled { color: var(--green); }
+
+  .ob-spread {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 5px 0;
+    font-size: 11px;
+    color: var(--yellow);
+    background: var(--bg3);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">P</div>
+    <div>
+      <div class="logo-text">Pionex</div>
+      <div class="logo-version">TRADING TERMINAL v2.0</div>
+    </div>
+  </div>
+  <div class="header-status">
+    <div class="flex-center">
+      <div class="status-dot" id="wsStatus"></div>
+      <span style="font-size:10px;color:var(--text3);letter-spacing:1px" id="wsLabel">DISCONNECTED</span>
+    </div>
+    <div class="server-time" id="serverTime">--:--:-- UTC</div>
+    <div class="server-time" id="selectedSymbol" style="color:var(--green)">BTC_USDT</div>
+  </div>
+</header>
+
+<!-- API CONFIG BAR -->
+<div class="api-bar">
+  <label>API KEY</label>
+  <input type="text" class="api-input" id="apiKey" placeholder="Ingresa tu Pionex API Key...">
+  <label>SECRET</label>
+  <input type="password" class="api-input" id="apiSecret" placeholder="Ingresa tu API Secret...">
+  <button class="btn" onclick="connectPrivate()">CONECTAR</button>
+  <button class="btn blue" onclick="loadMarkets()">CARGAR MERCADO</button>
+  <button class="btn red" onclick="disconnect()" id="disconnectBtn" style="display:none">DESCONECTAR</button>
+  <span style="font-size:10px;color:var(--text3);margin-left:8px" id="authStatus">Sin autenticar</span>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+    <label style="font-size:10px;color:var(--text3);letter-spacing:2px">PROXY CORS</label>
+    <select class="form-select" id="proxySelect" onchange="changeProxy(this.value)" style="width:auto;padding:4px 10px;font-size:11px">
+      <option value="corsproxy" selected>corsproxy.io ✓</option>
+      <option value="allorigins">allorigins.win</option>
+      <option value="none">Directo (sin proxy)</option>
+    </select>
+    <div id="proxyStatus" style="font-size:10px;color:var(--green)">● PROXY ACTIVO</div>
+  </div>
+</div>
+
+<!-- TICKER STRIP -->
+<div class="ticker-strip">
+  <div class="ticker-scroll" id="tickerScroll">
+    <div class="ticker-item"><span class="sym">BTC_USDT</span><span class="price up">--</span><span class="chg up">+0.00%</span></div>
+    <div class="ticker-item"><span class="sym">ETH_USDT</span><span class="price up">--</span><span class="chg up">+0.00%</span></div>
+    <div class="ticker-item"><span class="sym">SOL_USDT</span><span class="price up">--</span><span class="chg up">+0.00%</span></div>
+    <div class="ticker-item"><span class="sym">BNB_USDT</span><span class="price up">--</span><span class="chg up">+0.00%</span></div>
+    <div class="ticker-item"><span class="sym">XRP_USDT</span><span class="price up">--</span><span class="chg up">+0.00%</span></div>
+    <div class="ticker-item"><span class="sym">ADA_USDT</span><span class="price up">--</span><span class="chg up">+0.00%</span></div>
+    <div class="ticker-item"><span class="sym">DOGE_USDT</span><span class="price up">--</span><span class="chg up">+0.00%</span></div>
+    <div class="ticker-item"><span class="sym">AVAX_USDT</span><span class="price up">--</span><span class="chg up">+0.00%</span></div>
+  </div>
+</div>
+
+<!-- MAIN APP LAYOUT -->
+<div class="app-layout">
+
+  <!-- LEFT SIDEBAR: Symbol List -->
+  <div class="sidebar">
+    <div class="panel-title">
+      Mercado
+      <span class="badge green" id="symbolCount">0</span>
+    </div>
+    <div class="search-box">
+      <input type="text" class="search-input" id="symbolSearch" placeholder="Buscar par..." oninput="filterSymbols(this.value)">
+    </div>
+    <div class="symbol-list" id="symbolList">
+      <div class="loading-overlay"><div class="spinner"></div> CARGANDO</div>
+    </div>
+  </div>
+
+  <!-- CENTER: Main Trading Area -->
+  <div class="center">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('market', this)">MERCADO</button>
+      <button class="tab" onclick="switchTab('trade', this)">TRADING</button>
+      <button class="tab" onclick="switchTab('orders', this)">ÓRDENES</button>
+      <button class="tab" onclick="switchTab('account', this)">CUENTA</button>
+    </div>
+
+    <!-- MARKET TAB -->
+    <div class="tab-content" id="tab-market">
+      <!-- Klines Chart -->
+      <div class="chart-placeholder">
+        <div class="chart-title" id="chartTitle">BTC / USDT</div>
+        <div class="chart-price">
+          <div class="big up" id="chartPrice">---</div>
+          <div class="sub" id="chartChange">+0.00% (24h)</div>
+        </div>
+        <canvas id="priceChart"></canvas>
+      </div>
+
+      <div class="interval-bar">
+        <button class="interval-btn active" onclick="changeInterval('1M', this)">1m</button>
+        <button class="interval-btn" onclick="changeInterval('5M', this)">5m</button>
+        <button class="interval-btn" onclick="changeInterval('15M', this)">15m</button>
+        <button class="interval-btn" onclick="changeInterval('1H', this)">1H</button>
+        <button class="interval-btn" onclick="changeInterval('4H', this)">4H</button>
+        <button class="interval-btn" onclick="changeInterval('1D', this)">1D</button>
+        <button class="interval-btn" onclick="changeInterval('1W', this)">1W</button>
+        <span style="margin-left:auto;font-size:10px;color:var(--text3)" id="klineInfo"></span>
+        <button class="btn sm" onclick="loadKlines()">↺ REFRESCAR</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-label">Precio 24h H</div>
+          <div class="stat-val up" id="stat24High">---</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Precio 24h L</div>
+          <div class="stat-val dn" id="stat24Low">---</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Volumen 24h</div>
+          <div class="stat-val" id="stat24Vol">---</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Quote Vol 24h</div>
+          <div class="stat-val" id="stat24QVol">---</div>
+        </div>
+      </div>
+
+      <!-- Order Book + Recent Trades -->
+      <div class="orderbook-grid">
+        <div>
+          <div class="section-h">Order Book</div>
+          <div class="ob-panel">
+            <div class="ob-header">
+              <span>Precio (USDT)</span>
+              <span style="text-align:center">Cantidad</span>
+              <span style="text-align:right">Total</span>
+            </div>
+            <div id="asksContainer"></div>
+            <div class="ob-spread" id="spreadInfo">
+              <span>SPREAD</span><span id="spreadVal" style="color:var(--yellow)">---</span>
+            </div>
+            <div id="bidsContainer"></div>
+          </div>
+        </div>
+        <div>
+          <div class="section-h">Trades Recientes</div>
+          <div class="ob-panel" style="overflow:hidden">
+            <div class="ob-header">
+              <span>Precio</span>
+              <span style="text-align:center">Qty</span>
+              <span style="text-align:right">Hora</span>
+            </div>
+            <div id="recentTradesContainer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRADE TAB -->
+    <div class="tab-content" id="tab-trade" style="display:none">
+      <div class="section-h">Nueva Orden — <span id="tradeSymbol">BTC_USDT</span></div>
+      <div class="trade-form-grid">
+        <!-- BUY FORM -->
+        <div class="form-panel buy">
+          <div class="form-title buy">▲ COMPRAR</div>
+          <div class="form-group">
+            <label class="form-label">Tipo de Orden</label>
+            <select class="form-select" id="buyType" onchange="toggleBuyPrice()">
+              <option value="LIMIT">LIMIT</option>
+              <option value="MARKET">MARKET</option>
+            </select>
+          </div>
+          <div class="form-group" id="buyPriceGroup">
+            <label class="form-label">Precio (USDT)</label>
+            <input type="number" class="form-input" id="buyPrice" placeholder="0.00" step="any">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Cantidad</label>
+            <input type="number" class="form-input" id="buySize" placeholder="0.00000" step="any">
+            <div class="amount-hint" id="buyTotal">Total estimado: ---</div>
+          </div>
+          <div class="form-group" id="buyAmountGroup" style="display:none">
+            <label class="form-label">Monto (USDT) — Solo Market</label>
+            <input type="number" class="form-input" id="buyAmount" placeholder="10.00" step="any">
+          </div>
+          <button class="btn-trade btn-buy" onclick="placeOrder('BUY')">COMPRAR</button>
+        </div>
+
+        <!-- SELL FORM -->
+        <div class="form-panel sell">
+          <div class="form-title sell">▼ VENDER</div>
+          <div class="form-group">
+            <label class="form-label">Tipo de Orden</label>
+            <select class="form-select" id="sellType" onchange="toggleSellPrice()">
+              <option value="LIMIT">LIMIT</option>
+              <option value="MARKET">MARKET</option>
+            </select>
+          </div>
+          <div class="form-group" id="sellPriceGroup">
+            <label class="form-label">Precio (USDT)</label>
+            <input type="number" class="form-input" id="sellPrice" placeholder="0.00" step="any">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Cantidad</label>
+            <input type="number" class="form-input" id="sellSize" placeholder="0.00000" step="any">
+            <div class="amount-hint" id="sellTotal">Total estimado: ---</div>
+          </div>
+          <button class="btn-trade btn-sell" onclick="placeOrder('SELL')">VENDER</button>
+        </div>
+      </div>
+
+      <!-- Fee info -->
+      <div style="margin-top:16px;padding:12px;background:var(--bg2);border:1px solid var(--border);font-size:10px;color:var(--text3)">
+        ⚠ Las órdenes requieren API Key válida con permisos de trading. Verifica los montos mínimos del par seleccionado.
+        Comisión estándar Pionex: <span style="color:var(--yellow)">0.05%</span> maker / <span style="color:var(--yellow)">0.05%</span> taker.
+      </div>
+    </div>
+
+    <!-- ORDERS TAB -->
+    <div class="tab-content" id="tab-orders" style="display:none">
+      <div class="section-h">Órdenes Abiertas
+        <button class="btn sm" onclick="loadOrders()">↺ REFRESCAR</button>
+      </div>
+      <div id="openOrdersContainer">
+        <div class="empty-state">
+          <div class="icon">📋</div>
+          <div>Conecta tu API Key para ver tus órdenes activas</div>
+        </div>
+      </div>
+
+      <div class="section-h" style="margin-top:24px">Historial de Órdenes
+        <button class="btn sm" onclick="loadOrderHistory()">CARGAR</button>
+      </div>
+      <div id="orderHistoryContainer">
+        <div class="empty-state">
+          <div class="icon">📜</div>
+          <div>Historial de órdenes cerradas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCOUNT TAB -->
+    <div class="tab-content" id="tab-account" style="display:none">
+      <div class="section-h">Balances de Cuenta
+        <button class="btn sm" onclick="loadBalances()">↺ REFRESCAR</button>
+      </div>
+      <div id="balancesContainer">
+        <div class="empty-state">
+          <div class="icon">💼</div>
+          <div>Conecta tu API Key para ver tus balances</div>
+        </div>
+      </div>
+      <div class="separator"></div>
+      <div class="section-h">Información de API</div>
+      <div id="apiInfo" style="font-size:11px;color:var(--text2);padding:12px;background:var(--bg2);border:1px solid var(--border)">
+        Estado: Sin conexión. Ingresa tus credenciales API y haz click en CONECTAR.
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR: Live Trades / WS -->
+  <div class="sidebar-right">
+    <div class="panel-title">
+      Live Feed
+      <div class="flex-center">
+        <div class="status-dot" id="wsFeedDot" style="background:var(--text3);box-shadow:none"></div>
+        <button class="btn sm" onclick="connectWS()">WS</button>
+      </div>
+    </div>
+    <div class="ob-header" style="border-top:none">
+      <span>Precio</span><span style="text-align:center">Qty</span><span style="text-align:right">Side</span>
+    </div>
+    <div class="live-trades" id="liveTrades"></div>
+  </div>
+
+</div>
+
+<!-- NOTIFICATIONS -->
+<div class="notif-area" id="notifArea"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// PIONEX TRADING TERMINAL — Core JS
+// ═══════════════════════════════════════════════════════
+
+const BASE = 'https://api.pionex.com';
+
+// ─── CORS PROXIES ─────────────────────────────────────
+// Activo en GitHub Pages y cualquier entorno con CORS restringido
+const PROXIES = {
+  none:       { label: 'Directo (sin proxy)',  fn: url => url },
+  corsproxy:  { label: 'corsproxy.io',         fn: url => `https://corsproxy.io/?url=${encodeURIComponent(url)}` },
+  allorigins: { label: 'allorigins.win',        fn: url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}` },
+  cors_sh:    { label: 'cors.sh (requiere key)',fn: url => url }, // handled separately
+};
+
+let activeProxy = 'corsproxy'; // default: usa proxy
+let apiKey = '', apiSecret = '';
+let currentSymbol = 'BTC_USDT';
+let currentInterval = '1M';
+let allSymbols = [];
+let allTickers = {};
+let ws = null;
+let wsHeartbeat = null;
+let priceChartData = [];
+let isAuthenticated = false;
+let proxyFailed = 0; // contador de fallos para auto-switch
+
+function proxyUrl(url) {
+  return PROXIES[activeProxy]?.fn(url) || url;
+}
+
+// ─── UTILS ───────────────────────────────────────────
+function fmtNum(n, d=4) {
+  const f = parseFloat(n);
+  if (isNaN(f)) return '---';
+  if (f >= 1e9) return (f/1e9).toFixed(2)+'B';
+  if (f >= 1e6) return (f/1e6).toFixed(2)+'M';
+  if (f >= 1e3) return (f/1e3).toFixed(2)+'K';
+  return f.toFixed(d);
+}
+
+function fmtPrice(p) {
+  const f = parseFloat(p);
+  if (isNaN(f)) return '---';
+  if (f >= 10000) return f.toFixed(2);
+  if (f >= 100) return f.toFixed(3);
+  if (f >= 1) return f.toFixed(4);
+  return f.toFixed(6);
+}
+
+function fmtTime(ts) {
+  return new Date(ts).toLocaleTimeString('es', {hour12:false});
+}
+
+function fmtDate(ts) {
+  return new Date(ts).toLocaleString('es', {hour12:false});
+}
+
+function notify(msg, type='info', duration=4000) {
+  const area = document.getElementById('notifArea');
+  const el = document.createElement('div');
+  el.className = `notif ${type}`;
+  const icon = type==='success'?'✓':type==='error'?'✗':'ℹ';
+  el.innerHTML = `<span style="color:${type==='success'?'var(--green)':type==='error'?'var(--red)':'var(--blue)'}">${icon}</span> ${msg}`;
+  area.appendChild(el);
+  setTimeout(() => el.remove(), duration);
+}
+
+// ─── CLOCK ───────────────────────────────────────────
+setInterval(() => {
+  const now = new Date();
+  document.getElementById('serverTime').textContent =
+    now.toISOString().replace('T',' ').slice(0,19)+' UTC';
+}, 1000);
+
+// ─── AUTHENTICATION / SIGNING ────────────────────────
+function sign(method, path, params={}, body='') {
+  const ts = Date.now().toString();
+  params.timestamp = ts;
+  const sorted = Object.keys(params).sort().map(k=>`${k}=${params[k]}`).join('&');
+  const pathUrl = path + (sorted ? '?'+sorted : '');
+  let msg = method + pathUrl + ts;
+  if (body) msg += body;
+  const sig = CryptoJS.HmacSHA256(msg, apiSecret).toString(CryptoJS.enc.Hex);
+  return { sig, ts, query: sorted };
+}
+
+async function privateRequest(method, path, params={}, body=null) {
+  const bodyStr = body ? JSON.stringify(body) : '';
+  const {sig, ts, query} = sign(method, path, params, bodyStr);
+  const originalUrl = BASE + path + (query ? '?'+query : '');
+  const url = proxyUrl(originalUrl);
+  const opts = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'PIONEX-KEY': apiKey,
+      'PIONEX-SIGNATURE': sig,
+      'X-Requested-With': 'XMLHttpRequest',
+    }
+  };
+  if (bodyStr) opts.body = bodyStr;
+  try {
+    const res = await fetch(url, opts);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch(e) {
+    notify(`Error de red: ${e.message}. Verifica el proxy seleccionado.`, 'error');
+    throw e;
+  }
+}
+
+async function publicRequest(path, params={}) {
+  const query = Object.keys(params).map(k=>`${k}=${params[k]}`).join('&');
+  const originalUrl = BASE + path + (query ? '?'+query : '');
+  const url = proxyUrl(originalUrl);
+  try {
+    const res = await fetch(url, { headers: {'Content-Type':'application/json','X-Requested-With':'XMLHttpRequest'} });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    let data = await res.json();
+    // allorigins wraps response in { contents: "..." }
+    if (data && data.contents !== undefined) {
+      try { data = JSON.parse(data.contents); } catch(e2) {}
+    }
+    proxyFailed = 0;
+    return data;
+  } catch(e) {
+    proxyFailed++;
+    if (proxyFailed >= 3 && activeProxy !== 'none') {
+      notify(`Proxy "${PROXIES[activeProxy].label}" falló. Cambia de proxy en la barra de configuración.`, 'error', 7000);
+    }
+    throw e;
+  }
+}
+
+// ─── CONNECT / DISCONNECT ────────────────────────────
+async function connectPrivate() {
+  apiKey = document.getElementById('apiKey').value.trim();
+  apiSecret = document.getElementById('apiSecret').value.trim();
+  if (!apiKey || !apiSecret) { notify('Ingresa API Key y Secret', 'error'); return; }
+  try {
+    notify('Verificando credenciales...', 'info', 2000);
+    const data = await privateRequest('GET', '/api/v1/account/balances');
+    if (data.result) {
+      isAuthenticated = true;
+      document.getElementById('authStatus').innerHTML = '<span style="color:var(--green)">✓ Autenticado</span>';
+      document.getElementById('wsStatus').className = 'status-dot';
+      document.getElementById('wsLabel').textContent = 'AUTENTICADO';
+      document.getElementById('disconnectBtn').style.display = '';
+      document.getElementById('apiInfo').innerHTML = `
+        <span style="color:var(--green)">✓ Conexión exitosa</span><br><br>
+        API Key: ${apiKey.slice(0,8)}...${apiKey.slice(-4)}<br>
+        Timestamp: ${new Date().toISOString()}<br>
+        Permisos activos: LECTURA + TRADING
+      `;
+      notify('Conexión exitosa con Pionex API', 'success');
+      renderBalances(data.data.balances || []);
+      loadOrders();
+    } else {
+      notify(`Error: ${data.message || 'Credenciales inválidas'}`, 'error');
+    }
+  } catch(e) {
+    notify(`Error de conexión: ${e.message}`, 'error');
+    console.error(e);
+  }
+}
+
+function disconnect() {
+  isAuthenticated = false;
+  apiKey = ''; apiSecret = '';
+  document.getElementById('apiKey').value = '';
+  document.getElementById('apiSecret').value = '';
+  document.getElementById('authStatus').textContent = 'Sin autenticar';
+  document.getElementById('wsStatus').className = 'status-dot red';
+  document.getElementById('wsLabel').textContent = 'DISCONNECTED';
+  document.getElementById('disconnectBtn').style.display = 'none';
+  if (ws) { ws.close(); ws = null; }
+  notify('Desconectado', 'info');
+}
+
+// ─── LOAD MARKETS ────────────────────────────────────
+async function loadMarkets() {
+  try {
+    document.getElementById('symbolList').innerHTML =
+      '<div class="loading-overlay"><div class="spinner"></div> CARGANDO PARES</div>';
+    const [symbolsData, tickersData] = await Promise.all([
+      publicRequest('/api/v1/common/symbols'),
+      publicRequest('/api/v1/market/tickers')
+    ]);
+
+    if (symbolsData.data) {
+      allSymbols = (symbolsData.data.symbols || []).filter(s => s.enable && s.type === 'SPOT');
+    }
+
+    if (tickersData.data) {
+      tickersData.data.tickers.forEach(t => { allTickers[t.symbol] = t; });
+    }
+
+    renderSymbolList(allSymbols);
+    updateTickerStrip();
+    notify(`${allSymbols.length} pares SPOT cargados`, 'success');
+    document.getElementById('symbolCount').textContent = allSymbols.length;
+  } catch(e) {
+    document.getElementById('symbolList').innerHTML =
+      `<div class="empty-state"><div class="icon">⚠</div><div>Error: ${e.message}</div></div>`;
+    notify('Error cargando mercados. Posible CORS — usa un proxy o extensión.', 'error', 8000);
+  }
+}
+
+function renderSymbolList(symbols) {
+  const html = symbols.map(s => {
+    const t = allTickers[s.symbol] || {};
+    const chg = parseFloat(t.change || 0);
+    const isUp = chg >= 0;
+    return `<div class="symbol-item ${s.symbol===currentSymbol?'active':''}" 
+              onclick="selectSymbol('${s.symbol}')">
+      <div>
+        <div class="sym-name">${s.symbol.replace('_','/')}</div>
+        <div class="sym-base">${s.baseCoin}</div>
+      </div>
+      <div>
+        <div class="sym-price ${isUp?'up':'dn'}">${fmtPrice(t.close||0)}</div>
+        <div class="sym-change ${isUp?'up':'dn'}">${isUp?'+':''}${(chg*100).toFixed(2)}%</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('symbolList').innerHTML = html || '<div class="empty-state">Sin resultados</div>';
+}
+
+function filterSymbols(q) {
+  const filtered = allSymbols.filter(s => s.symbol.toUpperCase().includes(q.toUpperCase()));
+  renderSymbolList(filtered);
+}
+
+function updateTickerStrip() {
+  const topSyms = ['BTC_USDT','ETH_USDT','SOL_USDT','BNB_USDT','XRP_USDT','ADA_USDT',
+                   'DOGE_USDT','AVAX_USDT','LINK_USDT','MATIC_USDT','DOT_USDT','UNI_USDT'];
+  const items = topSyms.map(sym => {
+    const t = allTickers[sym] || {};
+    const chg = parseFloat(t.change||0);
+    const isUp = chg >= 0;
+    return `<div class="ticker-item" onclick="selectSymbol('${sym}')">
+      <span class="sym">${sym.replace('_','/')}</span>
+      <span class="price ${isUp?'up':'dn'}">${fmtPrice(t.close||0)}</span>
+      <span class="chg ${isUp?'up':'dn'}">${isUp?'+':''}${(chg*100).toFixed(2)}%</span>
+    </div>`;
+  }).join('');
+  const scroll = items + items; // duplicate for infinite loop
+  document.getElementById('tickerScroll').innerHTML = scroll;
+}
+
+// ─── SELECT SYMBOL ───────────────────────────────────
+function selectSymbol(sym) {
+  currentSymbol = sym;
+  document.getElementById('selectedSymbol').textContent = sym;
+  document.getElementById('chartTitle').textContent = sym.replace('_',' / ');
+  document.getElementById('tradeSymbol').textContent = sym;
+  document.querySelectorAll('.symbol-item').forEach(el => {
+    el.classList.toggle('active', el.querySelector('.sym-name')?.textContent === sym.replace('_','/'));
+  });
+  // load data for new symbol
+  loadTicker();
+  loadOrderBook();
+  loadRecentTrades();
+  loadKlines();
+  connectWS();
+  notify(`Símbolo: ${sym}`, 'info', 2000);
+}
+
+// ─── TICKER ──────────────────────────────────────────
+async function loadTicker() {
+  try {
+    const data = await publicRequest('/api/v1/market/tickers', {symbol: currentSymbol});
+    if (data.data && data.data.tickers && data.data.tickers.length) {
+      const t = data.data.tickers[0];
+      const chg = parseFloat(t.change||0);
+      const isUp = chg >= 0;
+      document.getElementById('chartPrice').textContent = fmtPrice(t.close);
+      document.getElementById('chartPrice').className = `big ${isUp?'up':'dn'}`;
+      document.getElementById('chartChange').textContent =
+        `${isUp?'+':''}${(chg*100).toFixed(2)}% (24h)`;
+      document.getElementById('chartChange').className = `sub ${isUp?'up':'dn'}`;
+      document.getElementById('stat24High').textContent = fmtPrice(t.high);
+      document.getElementById('stat24Low').textContent = fmtPrice(t.low);
+      document.getElementById('stat24Vol').textContent = fmtNum(t.volume);
+      document.getElementById('stat24QVol').textContent = fmtNum(t.amount);
+    }
+  } catch(e) { console.error('Ticker error:', e); }
+}
+
+// ─── ORDER BOOK ──────────────────────────────────────
+async function loadOrderBook() {
+  try {
+    const data = await publicRequest('/api/v1/market/depth', {symbol: currentSymbol, limit: 10});
+    if (!data.data) return;
+    const {asks, bids} = data.data;
+    const maxVol = Math.max(...[...asks, ...bids].map(o => parseFloat(o[1])));
+
+    // Asks (sell) — show reversed (lowest ask at bottom)
+    const askRows = asks.slice(0,10).reverse().map(([price, size]) => {
+      const pct = (parseFloat(size)/maxVol*100).toFixed(1);
+      const total = (parseFloat(price)*parseFloat(size)).toFixed(2);
+      return `<div class="ob-row" onclick="fillPrice('${price}')">
+        <span class="dn">${fmtPrice(price)}</span>
+        <span style="text-align:center;color:var(--text2)">${parseFloat(size).toFixed(4)}</span>
+        <span style="text-align:right;color:var(--text3)">${fmtNum(parseFloat(total),2)}</span>
+        <div class="ob-bar ask" style="width:${pct}%"></div>
+      </div>`;
+    }).join('');
+
+    // Bid rows
+    const bidRows = bids.slice(0,10).map(([price, size]) => {
+      const pct = (parseFloat(size)/maxVol*100).toFixed(1);
+      const total = (parseFloat(price)*parseFloat(size)).toFixed(2);
+      return `<div class="ob-row" onclick="fillPrice('${price}')">
+        <span class="up">${fmtPrice(price)}</span>
+        <span style="text-align:center;color:var(--text2)">${parseFloat(size).toFixed(4)}</span>
+        <span style="text-align:right;color:var(--text3)">${fmtNum(parseFloat(total),2)}</span>
+        <div class="ob-bar bid" style="width:${pct}%"></div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('asksContainer').innerHTML = askRows;
+    document.getElementById('bidsContainer').innerHTML = bidRows;
+
+    if (asks.length && bids.length) {
+      const spread = (parseFloat(asks[0][0]) - parseFloat(bids[0][0])).toFixed(4);
+      document.getElementById('spreadVal').textContent = spread;
+    }
+  } catch(e) { console.error('OrderBook error:', e); }
+}
+
+function fillPrice(p) {
+  document.getElementById('buyPrice').value = p;
+  document.getElementById('sellPrice').value = p;
+  updateTotals();
+}
+
+// ─── RECENT TRADES ───────────────────────────────────
+async function loadRecentTrades() {
+  try {
+    const data = await publicRequest('/api/v1/market/trades', {symbol: currentSymbol, limit: 20});
+    if (!data.data) return;
+    const trades = data.data.trades || data.data;
+    const html = trades.slice(0,20).map(t => {
+      const isBuy = t.side === 'BUY' || t.takerSide === 'BUY';
+      return `<div class="ob-row">
+        <span class="${isBuy?'up':'dn'}">${fmtPrice(t.price)}</span>
+        <span style="text-align:center;color:var(--text2)">${parseFloat(t.size||t.qty||0).toFixed(4)}</span>
+        <span class="trade-time" style="text-align:right">${fmtTime(t.time||t.timestamp||Date.now())}</span>
+      </div>`;
+    }).join('');
+    document.getElementById('recentTradesContainer').innerHTML = html;
+  } catch(e) { console.error('Trades error:', e); }
+}
+
+// ─── KLINES / CHART ──────────────────────────────────
+async function loadKlines() {
+  try {
+    document.getElementById('klineInfo').innerHTML = '<span class="spinner"></span>';
+    const data = await publicRequest('/api/v1/market/klines', {
+      symbol: currentSymbol,
+      interval: currentInterval,
+      limit: 100
+    });
+    if (data.data && data.data.klines) {
+      priceChartData = data.data.klines;
+      drawChart(priceChartData);
+      document.getElementById('klineInfo').textContent = `${priceChartData.length} velas`;
+    } else {
+      document.getElementById('klineInfo').textContent = 'Sin datos';
+    }
+  } catch(e) {
+    document.getElementById('klineInfo').textContent = 'Error';
+    console.error('Klines error:', e);
+  }
+}
+
+function changeInterval(interval, btn) {
+  currentInterval = interval;
+  document.querySelectorAll('.interval-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadKlines();
+}
+
+function drawChart(klines) {
+  const canvas = document.getElementById('priceChart');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 800;
+  const H = 220;
+  canvas.width = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+
+  const closes = klines.map(k => parseFloat(k[4] || k.close || 0));
+  const highs = klines.map(k => parseFloat(k[2] || k.high || 0));
+  const lows = klines.map(k => parseFloat(k[3] || k.low || 0));
+  const vols = klines.map(k => parseFloat(k[5] || k.volume || 0));
+
+  const minP = Math.min(...lows) * 0.999;
+  const maxP = Math.max(...highs) * 1.001;
+  const maxV = Math.max(...vols);
+  const n = klines.length;
+  const padL = 10, padR = 10, padT = 10, padB = 20;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB - 40; // reserve 40px for volume
+  const volH = 30;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid lines
+  ctx.strokeStyle = '#1a2535';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 4; i++) {
+    const y = padT + (chartH / 4) * i;
+    ctx.beginPath();
+    ctx.moveTo(padL, y);
+    ctx.lineTo(W - padR, y);
+    ctx.stroke();
+    const price = maxP - (maxP-minP)*(i/4);
+    ctx.fillStyle = '#3d5570';
+    ctx.font = '9px Space Mono, monospace';
+    ctx.fillText(fmtPrice(price), padL, y - 3);
+  }
+
+  // Price line (area)
+  const toX = i => padL + (i / (n-1)) * chartW;
+  const toY = p => padT + chartH - ((p-minP)/(maxP-minP)) * chartH;
+
+  // Fill area
+  const grad = ctx.createLinearGradient(0, padT, 0, padT+chartH);
+  const firstClose = closes[0], lastClose = closes[closes.length-1];
+  const isUp = lastClose >= firstClose;
+  grad.addColorStop(0, isUp ? 'rgba(0,229,160,0.25)' : 'rgba(255,69,96,0.25)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+
+  ctx.beginPath();
+  ctx.moveTo(toX(0), toY(closes[0]));
+  for (let i = 1; i < n; i++) ctx.lineTo(toX(i), toY(closes[i]));
+  ctx.lineTo(toX(n-1), padT+chartH);
+  ctx.lineTo(padL, padT+chartH);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Price line
+  ctx.beginPath();
+  ctx.strokeStyle = isUp ? '#00e5a0' : '#ff4560';
+  ctx.lineWidth = 1.5;
+  ctx.moveTo(toX(0), toY(closes[0]));
+  for (let i = 1; i < n; i++) ctx.lineTo(toX(i), toY(closes[i]));
+  ctx.stroke();
+
+  // Volume bars
+  const volBase = H - padB;
+  for (let i = 0; i < n; i++) {
+    const x = toX(i);
+    const barH = (vols[i]/maxV) * volH;
+    const isUpBar = closes[i] >= (i>0?closes[i-1]:closes[i]);
+    ctx.fillStyle = isUpBar ? 'rgba(0,229,160,0.3)' : 'rgba(255,69,96,0.3)';
+    const bw = Math.max(1, chartW/n - 1);
+    ctx.fillRect(x - bw/2, volBase - barH, bw, barH);
+  }
+
+  // Last price line
+  const lastY = toY(lastClose);
+  ctx.setLineDash([3,3]);
+  ctx.strokeStyle = isUp ? 'rgba(0,229,160,0.5)' : 'rgba(255,69,96,0.5)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padL, lastY);
+  ctx.lineTo(W-padR, lastY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Last price label
+  ctx.fillStyle = isUp ? '#00e5a0' : '#ff4560';
+  ctx.font = 'bold 10px Space Mono, monospace';
+  ctx.fillText(fmtPrice(lastClose), W-padR-60, lastY-3);
+}
+
+// ─── WEBSOCKET (PUBLIC) ───────────────────────────────
+function connectWS() {
+  if (ws) { ws.close(); ws = null; }
+  if (wsHeartbeat) { clearInterval(wsHeartbeat); }
+
+  try {
+    ws = new WebSocket('wss://ws.pionex.com/wsPub');
+
+    ws.onopen = () => {
+      document.getElementById('wsFeedDot').style.background = 'var(--green)';
+      document.getElementById('wsFeedDot').style.boxShadow = '0 0 8px var(--green)';
+      // Subscribe to trades and depth
+      ws.send(JSON.stringify({op:'SUBSCRIBE', topic:'TRADE', symbol: currentSymbol}));
+      ws.send(JSON.stringify({op:'SUBSCRIBE', topic:'DEPTH', symbol: currentSymbol}));
+      wsHeartbeat = setInterval(() => {
+        if (ws && ws.readyState === 1) ws.send(JSON.stringify({op:'PING'}));
+      }, 20000);
+    };
+
+    ws.onmessage = (e) => {
+      try {
+        const msg = JSON.parse(e.data);
+        if (msg.op === 'PONG') return;
+        if (msg.topic === 'TRADE') handleWSTrade(msg.data);
+        if (msg.topic === 'DEPTH') handleWSDepth(msg.data);
+      } catch(err) {}
+    };
+
+    ws.onerror = () => {
+      document.getElementById('wsFeedDot').style.background = 'var(--red)';
+      document.getElementById('wsFeedDot').style.boxShadow = 'none';
+    };
+
+    ws.onclose = () => {
+      document.getElementById('wsFeedDot').style.background = 'var(--text3)';
+      document.getElementById('wsFeedDot').style.boxShadow = 'none';
+    };
+  } catch(e) { console.error('WS error:', e); }
+}
+
+function handleWSTrade(trades) {
+  const container = document.getElementById('liveTrades');
+  const arr = Array.isArray(trades) ? trades : [trades];
+  arr.forEach(t => {
+    const isBuy = t.takerSide === 'BUY' || t.side === 'BUY';
+    const row = document.createElement('div');
+    row.className = 'trade-row';
+    row.innerHTML = `
+      <span class="${isBuy?'up':'dn'}">${fmtPrice(t.price)}</span>
+      <span style="text-align:center;color:var(--text2)">${parseFloat(t.size||0).toFixed(4)}</span>
+      <span style="text-align:right" class="${isBuy?'up':'dn'}">${isBuy?'BUY':'SELL'}</span>
+    `;
+    container.insertBefore(row, container.firstChild);
+    if (container.children.length > 50) container.lastChild.remove();
+
+    // Update chart price
+    document.getElementById('chartPrice').textContent = fmtPrice(t.price);
+  });
+}
+
+function handleWSDepth(data) {
+  // lightweight real-time depth update
+  if (data && (data.asks || data.bids)) {
+    loadOrderBook();
+  }
+}
+
+// ─── ORDERS ──────────────────────────────────────────
+async function loadOrders() {
+  if (!isAuthenticated) {
+    document.getElementById('openOrdersContainer').innerHTML =
+      '<div class="empty-state"><div class="icon">🔒</div><div>Conecta tu API Key primero</div></div>';
+    return;
+  }
+  try {
+    document.getElementById('openOrdersContainer').innerHTML =
+      '<div class="loading-overlay"><div class="spinner"></div> CARGANDO ÓRDENES</div>';
+    const data = await privateRequest('GET', '/api/v1/trade/orders', {symbol: currentSymbol});
+    if (data.result) {
+      renderOrders(data.data.orders || [], 'openOrdersContainer', true);
+    } else {
+      notify(data.message || 'Error cargando órdenes', 'error');
+    }
+  } catch(e) { notify('Error: ' + e.message, 'error'); }
+}
+
+async function loadOrderHistory() {
+  if (!isAuthenticated) return;
+  try {
+    document.getElementById('orderHistoryContainer').innerHTML =
+      '<div class="loading-overlay"><div class="spinner"></div> CARGANDO</div>';
+    const data = await privateRequest('GET', '/api/v1/trade/orders', {
+      symbol: currentSymbol, status: 'CLOSED'
+    });
+    if (data.result) {
+      renderOrders(data.data.orders || [], 'orderHistoryContainer', false);
+    }
+  } catch(e) { notify('Error: ' + e.message, 'error'); }
+}
+
+function renderOrders(orders, containerId, showCancel) {
+  if (!orders.length) {
+    document.getElementById(containerId).innerHTML =
+      '<div class="empty-state"><div class="icon">📭</div><div>Sin órdenes</div></div>';
+    return;
+  }
+  const html = `<table class="data-table">
+    <thead><tr>
+      <th>ID</th><th>Par</th><th>Tipo</th><th>Lado</th>
+      <th>Precio</th><th>Cantidad</th><th>Llenado</th><th>Estado</th><th>Fecha</th>
+      ${showCancel?'<th>Acción</th>':''}
+    </tr></thead>
+    <tbody>
+      ${orders.map(o => `<tr>
+        <td style="color:var(--text3)">${String(o.orderId||'').slice(-8)}</td>
+        <td>${o.symbol}</td>
+        <td style="color:var(--yellow)">${o.type}</td>
+        <td class="${o.side==='BUY'?'up':'dn'}">${o.side}</td>
+        <td>${fmtPrice(o.price||0)}</td>
+        <td>${parseFloat(o.size||0).toFixed(6)}</td>
+        <td style="color:var(--text2)">${parseFloat(o.filledSize||0).toFixed(6)}</td>
+        <td class="${o.status==='OPEN'?'status-open':'status-closed'}">${o.status}</td>
+        <td style="color:var(--text3)">${fmtDate(o.createTime||Date.now())}</td>
+        ${showCancel?`<td><button class="btn sm red" onclick="cancelOrder('${o.orderId}','${o.symbol}')">CANCEL</button></td>`:''}
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+  document.getElementById(containerId).innerHTML = html;
+}
+
+async function cancelOrder(orderId, symbol) {
+  if (!confirm('¿Cancelar orden ' + orderId + '?')) return;
+  try {
+    const data = await privateRequest('DELETE', '/api/v1/trade/order', {orderId, symbol});
+    if (data.result) {
+      notify('Orden cancelada', 'success');
+      loadOrders();
+    } else {
+      notify('Error: ' + (data.message||'desconocido'), 'error');
+    }
+  } catch(e) { notify('Error: ' + e.message, 'error'); }
+}
+
+// ─── PLACE ORDER ─────────────────────────────────────
+async function placeOrder(side) {
+  if (!isAuthenticated) { notify('Conecta tu API Key primero', 'error'); return; }
+
+  const type = side === 'BUY' ?
+    document.getElementById('buyType').value :
+    document.getElementById('sellType').value;
+
+  const order = { symbol: currentSymbol, side, type };
+
+  if (type === 'LIMIT') {
+    const price = side==='BUY' ?
+      document.getElementById('buyPrice').value :
+      document.getElementById('sellPrice').value;
+    const size = side==='BUY' ?
+      document.getElementById('buySize').value :
+      document.getElementById('sellSize').value;
+    if (!price || !size) { notify('Ingresa precio y cantidad', 'error'); return; }
+    order.price = price;
+    order.size = size;
+  } else {
+    // MARKET
+    if (side === 'BUY') {
+      const amount = document.getElementById('buyAmount').value;
+      const size = document.getElementById('buySize').value;
+      if (amount) order.amount = amount;
+      else if (size) order.size = size;
+      else { notify('Ingresa cantidad o monto', 'error'); return; }
+    } else {
+      const size = document.getElementById('sellSize').value;
+      if (!size) { notify('Ingresa cantidad', 'error'); return; }
+      order.size = size;
+    }
+  }
+
+  if (!confirm(`¿Confirmar ${side} ${type} en ${currentSymbol}?`)) return;
+
+  try {
+    const data = await privateRequest('POST', '/api/v1/trade/order', {}, order);
+    if (data.result) {
+      notify(`Orden ${side} colocada — ID: ${data.data.orderId}`, 'success');
+      loadOrders();
+    } else {
+      notify('Error: ' + (data.message || 'desconocido'), 'error');
+    }
+  } catch(e) { notify('Error: ' + e.message, 'error'); }
+}
+
+// ─── BALANCES ────────────────────────────────────────
+async function loadBalances() {
+  if (!isAuthenticated) { notify('Conecta primero', 'error'); return; }
+  try {
+    const data = await privateRequest('GET', '/api/v1/account/balances');
+    if (data.result) renderBalances(data.data.balances || []);
+    else notify(data.message || 'Error', 'error');
+  } catch(e) { notify('Error: ' + e.message, 'error'); }
+}
+
+function renderBalances(balances) {
+  const nonZero = balances.filter(b => parseFloat(b.free||0) > 0 || parseFloat(b.frozen||0) > 0);
+  if (!nonZero.length) {
+    document.getElementById('balancesContainer').innerHTML =
+      '<div class="empty-state"><div class="icon">💰</div><div>Sin saldo disponible</div></div>';
+    return;
+  }
+  const html = `<div class="balance-grid">
+    ${nonZero.map(b => `<div class="balance-card">
+      <div class="balance-coin">${b.coin}</div>
+      <div class="balance-amount">${parseFloat(b.free||0).toFixed(6)}</div>
+      <div class="balance-frozen">Frozen: ${parseFloat(b.frozen||0).toFixed(6)}</div>
+    </div>`).join('')}
+  </div>`;
+  document.getElementById('balancesContainer').innerHTML = html;
+}
+
+// ─── FORM HELPERS ────────────────────────────────────
+function toggleBuyPrice() {
+  const isMarket = document.getElementById('buyType').value === 'MARKET';
+  document.getElementById('buyPriceGroup').style.display = isMarket ? 'none' : '';
+  document.getElementById('buyAmountGroup').style.display = isMarket ? '' : 'none';
+}
+
+function toggleSellPrice() {
+  const isMarket = document.getElementById('sellType').value === 'MARKET';
+  document.getElementById('sellPriceGroup').style.display = isMarket ? 'none' : '';
+}
+
+function updateTotals() {
+  const bp = parseFloat(document.getElementById('buyPrice').value||0);
+  const bs = parseFloat(document.getElementById('buySize').value||0);
+  if (bp && bs) document.getElementById('buyTotal').textContent =
+    `Total estimado: ${(bp*bs).toFixed(4)} USDT`;
+
+  const sp = parseFloat(document.getElementById('sellPrice').value||0);
+  const ss = parseFloat(document.getElementById('sellSize').value||0);
+  if (sp && ss) document.getElementById('sellTotal').textContent =
+    `Total estimado: ${(sp*ss).toFixed(4)} USDT`;
+}
+
+['buyPrice','buySize','sellPrice','sellSize'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', updateTotals);
+});
+
+// ─── TABS ────────────────────────────────────────────
+function switchTab(name, btn) {
+  ['market','trade','orders','account'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t===name ? '' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  if (name === 'orders' && isAuthenticated) loadOrders();
+  if (name === 'account' && isAuthenticated) loadBalances();
+}
+
+// ─── AUTO-REFRESH ────────────────────────────────────
+setInterval(() => {
+  if (currentSymbol) {
+    loadTicker();
+    loadOrderBook();
+    loadRecentTrades();
+  }
+}, 10000);
+
+// ─── PROXY CONTROL ────────────────────────────────────
+function changeProxy(val) {
+  activeProxy = val;
+  proxyFailed = 0;
+  const statusEl = document.getElementById('proxyStatus');
+  if (val === 'none') {
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = '● SIN PROXY';
+    notify('Modo directo. Puede fallar por CORS en GitHub Pages.', 'info', 5000);
+  } else {
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = `● ${PROXIES[val].label.toUpperCase()}`;
+    notify(`Proxy cambiado a: ${PROXIES[val].label}`, 'success', 3000);
+  }
+}
+
+// ─── INIT ────────────────────────────────────────────
+(async function init() {
+  notify('Pionex Terminal cargado. Carga el mercado para empezar.', 'info', 5000);
+  loadMarkets();
+  setTimeout(() => selectSymbol('BTC_USDT'), 1500);
+})();
+</script>
+</body>
+</html>
